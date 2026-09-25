@@ -1245,7 +1245,7 @@ async function startGeneration() {
 
         if (i + BATCH_SIZE < state.queue.length && !state.stopRequested) {
             console.log('[Atelier] Pause de 5s avant le prochain lot…');
-            await sleep(5000);
+            await sleep(60000);   // 60 secondes
         }
     }
 
