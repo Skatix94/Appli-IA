@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Atelier Vidéo — Publicité Produit</title>
+<title>Atelier Vidéo — Super App</title>
 <meta name="theme-color" content="#1a1a1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,45 +22,33 @@
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
         background: var(--bg); color: var(--ink); min-height: 100vh;
-        padding: 1.5rem 1rem calc(6rem + var(--safe-bottom)); font-size: 15px; line-height: 1.5;
+        padding: 1rem 1rem calc(6rem + var(--safe-bottom)); font-size: 15px; line-height: 1.5;
         max-width: 900px; margin: 0 auto;
     }
-    header { margin-bottom: 1.5rem; text-align: center; }
+    header { margin-bottom: 1rem; text-align: center; }
     h1 { font-size: 1.4rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
     .subtitle { font-size: 0.8rem; color: var(--ink-dim); font-style: italic; }
 
     .toast {
         position: fixed; top: 1.5rem; left: 50%;
         transform: translateX(-50%) translateY(-100px);
-        background: var(--ink); color: #fff;
-        padding: 0.85rem 1.4rem; border-radius: 10px;
-        font-size: 0.85rem; font-weight: 500;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        z-index: 1000; opacity: 0;
+        background: var(--ink); color: #fff; padding: 0.85rem 1.4rem;
+        border-radius: 10px; font-size: 0.85rem; font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 1000; opacity: 0;
         transition: transform 0.35s ease, opacity 0.35s ease;
         max-width: 90vw; text-align: center;
-        display: flex; align-items: center; gap: 0.5rem;
     }
     .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { background: var(--success); }
     .toast.error { background: var(--error); }
     .toast.warn { background: var(--warn); }
 
-    .info-banner {
-        background: #eef4ff; border-left: 3px solid var(--info);
-        padding: 0.75rem 0.95rem; border-radius: 8px;
-        font-size: 0.78rem; color: #2a3a5c;
-        margin-bottom: 1rem; line-height: 1.45;
-    }
-    .info-banner strong { color: #1a1a1a; }
-
     .section {
         background: var(--panel); border: 1px solid var(--border);
-        border-radius: var(--radius); margin-bottom: 1rem;
-        overflow: hidden;
+        border-radius: var(--radius); margin-bottom: 0.8rem; overflow: hidden;
     }
     .section-header {
-        padding: 0.9rem 1.1rem; cursor: pointer; user-select: none;
+        padding: 0.85rem 1rem; cursor: pointer; user-select: none;
         display: flex; justify-content: space-between; align-items: center;
     }
     .section-header:active { background: var(--panel-2); }
@@ -71,250 +59,199 @@
     .section-title .badge {
         display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem;
         background: var(--ink); color: #fff; border-radius: 10px;
-        font-size: 0.65rem; letter-spacing: 0;
+        font-size: 0.65rem;
     }
-    .section-title .badge.soft { background: var(--info); color: #fff; }
-    .section-header .chevron { font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s; }
+    .section-header .chevron {
+        font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s;
+    }
     .section.open .section-header .chevron { transform: rotate(180deg); }
     .section-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-    .section.open .section-body { max-height: 4000px; }
-    .section-content { padding: 0 1.1rem 1.1rem; }
+    .section.open .section-body { max-height: 5000px; }
+    .section-content { padding: 0 1rem 1rem; }
+
+    .mode-current {
+        background: var(--ink); color: #fff;
+        padding: 1rem; border-radius: 10px; margin-bottom: 0.8rem;
+        display: flex; align-items: center; gap: 0.8rem;
+    }
+    .mode-current .m-emoji { font-size: 2rem; }
+    .mode-current .m-info { flex: 1; }
+    .mode-current .m-name { font-size: 1rem; font-weight: 600; }
+    .mode-current .m-desc { font-size: 0.75rem; opacity: 0.8; margin-top: 0.15rem; }
+    .mode-current .m-num {
+        font-size: 0.7rem; opacity: 0.6;
+        background: rgba(255,255,255,0.15);
+        padding: 0.15rem 0.5rem; border-radius: 10px;
+    }
+
+    .mode-search {
+        width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px;
+        border: 1px solid var(--border); background: #fafafa;
+        color: var(--ink); font-family: inherit; font-size: 0.88rem;
+        margin-bottom: 0.6rem;
+    }
+    .mode-search:focus { outline: none; border-color: var(--ink); }
+
+    .mode-category {
+        font-size: 0.7rem; font-weight: 700; color: var(--ink-dim);
+        text-transform: uppercase; letter-spacing: 0.08em;
+        padding: 0.6rem 0 0.3rem;
+        border-bottom: 1px solid var(--border); margin-bottom: 0.4rem;
+    }
+    .mode-category:first-child { padding-top: 0; }
+
+    .mode-list {
+        display: grid; grid-template-columns: 1fr; gap: 0.4rem;
+        max-height: 400px; overflow-y: auto; margin-top: 0.4rem;
+    }
+    .mode-item {
+        padding: 0.7rem 0.8rem; border-radius: 8px;
+        border: 1px solid var(--border); background: var(--panel-2);
+        cursor: pointer; transition: all 0.15s;
+        display: flex; align-items: center; gap: 0.6rem;
+    }
+    .mode-item:active { transform: scale(0.99); }
+    .mode-item.selected { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .mode-item .mi-emoji { font-size: 1.3rem; flex-shrink: 0; }
+    .mode-item .mi-info { flex: 1; min-width: 0; }
+    .mode-item .mi-name { font-size: 0.85rem; font-weight: 600; }
+    .mode-item .mi-desc { font-size: 0.7rem; opacity: 0.7; margin-top: 0.1rem; }
+    .mode-item .mi-num {
+        font-size: 0.65rem; opacity: 0.5;
+        background: rgba(0,0,0,0.05); padding: 0.1rem 0.4rem; border-radius: 8px;
+    }
+    .mode-item.selected .mi-num { background: rgba(255,255,255,0.15); opacity: 0.8; }
 
     .api-panel {
         background: var(--panel); border: 1px solid var(--border);
-        border-radius: var(--radius); padding: 1rem 1.2rem;
-        margin-bottom: 1rem; transition: border-color 0.3s;
+        border-radius: var(--radius); padding: 0.9rem 1rem;
+        margin-bottom: 0.8rem;
     }
     .api-panel.ok { border-color: var(--success); }
     .api-key-input {
-        width: 100%; padding: 0.85rem 1rem;
-        border-radius: 8px; border: 1px solid var(--border);
-        background: #fafafa; color: var(--ink);
-        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-        font-size: 0.85rem; margin-bottom: 0.6rem;
+        width: 100%; padding: 0.75rem 0.9rem; border-radius: 8px;
+        border: 1px solid var(--border); background: #fafafa;
+        font-family: ui-monospace, monospace; font-size: 0.8rem;
+        margin-bottom: 0.5rem;
     }
     .api-key-input:focus { outline: none; border-color: var(--ink); }
     .api-save-btn {
-        width: 100%; padding: 0.8rem 1.2rem;
-        border-radius: 8px; border: none;
-        background: var(--ink); color: #fff;
-        font-size: 0.9rem; font-weight: 600; font-family: inherit;
-        cursor: pointer; transition: opacity 0.2s, transform 0.1s;
-        margin-bottom: 0.6rem;
+        width: 100%; padding: 0.7rem; border-radius: 8px; border: none;
+        background: var(--ink); color: #fff; font-size: 0.85rem;
+        font-weight: 600; cursor: pointer;
     }
-    .api-save-btn:active { transform: scale(0.98); }
     .api-status-line {
-        font-size: 0.75rem; padding: 0.55rem 0.85rem;
-        border-radius: 6px; margin-bottom: 0.5rem;
-        display: flex; align-items: center; gap: 0.5rem;
+        font-size: 0.72rem; padding: 0.5rem 0.7rem; border-radius: 6px;
+        margin-top: 0.5rem; display: flex; align-items: center; gap: 0.4rem;
         background: var(--panel-2); color: var(--ink-dim);
-        transition: all 0.3s;
     }
-    .api-status-line.ok { background: #e3f5e9; color: var(--success); font-weight: 600; }
+    .api-status-line.ok { background: #e3f5e9; color: var(--success); }
     .api-status-line .status-dot {
         width: 8px; height: 8px; border-radius: 50%;
-        background: var(--ink-faint); flex-shrink: 0; transition: background 0.3s;
+        background: var(--ink-faint); flex-shrink: 0;
     }
     .api-status-line.ok .status-dot { background: var(--success); }
-    .api-hint { font-size: 0.72rem; color: var(--ink-dim); margin-top: 0.4rem; }
-    .api-hint a { color: var(--ink); text-decoration: underline; }
-    .stat-line {
-        font-size: 0.72rem; color: var(--ink-dim); margin-top: 0.5rem;
-        padding: 0.4rem 0.6rem; background: var(--panel-2); border-radius: 6px;
-        display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem;
-    }
-    .wake-status {
-        font-size: 0.72rem; padding: 0.5rem 0.7rem;
-        border-radius: 6px; margin-top: 0.4rem;
-        display: flex; justify-content: space-between; align-items: center;
-        background: #eef4ff; color: var(--info);
-        flex-wrap: wrap; gap: 0.4rem;
-    }
-    .wake-status.active { background: #e3f5e9; color: var(--success); }
-    .wake-status.warn { background: #fdf5e3; color: var(--warn); }
-    .wake-status button {
-        background: transparent; border: 1px solid currentColor;
-        color: inherit; padding: 0.25rem 0.6rem; border-radius: 6px;
-        font-size: 0.68rem; cursor: pointer; font-family: inherit;
-    }
 
     .upload-zone {
         border: 2px dashed var(--border); border-radius: var(--radius);
-        padding: 2rem 1rem; text-align: center; cursor: pointer;
-        transition: border-color 0.2s, background 0.2s; margin-bottom: 1rem;
+        padding: 1.5rem 1rem; text-align: center; cursor: pointer;
+        transition: border-color 0.2s; margin-bottom: 0.8rem;
         background: var(--panel);
     }
-    .upload-zone:active { border-color: var(--ink); background: #f5f5f5; }
-    .upload-zone.loading { pointer-events: none; opacity: 0.6; }
+    .upload-zone:active { border-color: var(--ink); }
     .upload-zone input[type="file"] { display: none; }
-    .upload-icon { font-size: 2.2rem; margin-bottom: 0.6rem; opacity: 0.6; }
-    .upload-text { font-size: 0.95rem; color: var(--ink); margin-bottom: 0.2rem; }
-    .upload-hint { font-size: 0.75rem; color: var(--ink-dim); }
+    .upload-icon { font-size: 2rem; margin-bottom: 0.4rem; opacity: 0.6; }
+    .upload-text { font-size: 0.9rem; }
+    .upload-hint { font-size: 0.72rem; color: var(--ink-dim); margin-top: 0.2rem; }
 
     .images-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-        gap: 0.5rem; margin-bottom: 1rem;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.4rem; margin-bottom: 0.8rem;
     }
     .image-card {
         position: relative; border-radius: 8px; overflow: hidden;
-        border: 1px solid var(--border); background: #f0f0f0;
-        aspect-ratio: 9/16;
+        border: 1px solid var(--border); aspect-ratio: 9/16; background: #f0f0f0;
     }
     .image-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .image-card .remove-btn {
-        position: absolute; top: 4px; right: 4px;
+        position: absolute; top: 3px; right: 3px;
         background: rgba(0,0,0,0.65); color: #fff; border: none;
-        width: 22px; height: 22px; border-radius: 50%; font-size: 11px;
+        width: 20px; height: 20px; border-radius: 50%; font-size: 10px;
         cursor: pointer; display: flex; align-items: center; justify-content: center;
-        line-height: 1;
     }
 
     textarea, input[type="text"] {
-        width: 100%; padding: 0.75rem 0.9rem; border-radius: 8px;
+        width: 100%; padding: 0.7rem 0.85rem; border-radius: 8px;
         border: 1px solid var(--border); background: #fafafa;
-        color: var(--ink); font-family: inherit; font-size: 0.88rem;
+        color: var(--ink); font-family: inherit; font-size: 0.85rem;
         min-height: 60px; resize: vertical;
     }
     textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--ink); }
 
-    .styles-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 0.5rem;
-    }
-    .style-card {
-        padding: 0.75rem 0.85rem; border-radius: 8px;
-        border: 1px solid var(--border); background: var(--panel-2);
-        cursor: pointer; transition: all 0.15s;
-        display: flex; align-items: center; gap: 0.5rem;
-    }
-    .style-card:active { transform: scale(0.98); }
-    .style-card.selected { background: var(--ink); color: #fff; border-color: var(--ink); }
-    .style-card .style-emoji { font-size: 1.2rem; flex-shrink: 0; }
-    .style-card .style-name { font-size: 0.8rem; font-weight: 500; line-height: 1.2; }
-    .style-card .style-desc { font-size: 0.65rem; opacity: 0.65; margin-top: 0.1rem; line-height: 1.2; }
-
-    .style-category-header {
-        grid-column: 1 / -1;
-        font-size: 0.7rem; font-weight: 600;
-        color: var(--ink-dim); text-transform: uppercase;
-        letter-spacing: 0.08em;
-        padding: 0.6rem 0 0.3rem;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 0.3rem;
-    }
-    .style-category-header:first-child { padding-top: 0; border-bottom: none; }
-    .style-category-desc {
-        grid-column: 1 / -1;
-        font-size: 0.68rem; color: var(--ink-dim);
-        font-style: italic; margin-bottom: 0.4rem; line-height: 1.35;
-    }
-    .no-style-card {
-        grid-column: 1 / -1;
-        padding: 0.8rem 1rem;
-        border-radius: 8px;
-        border: 2px dashed var(--border);
-        background: transparent;
-        text-align: center; cursor: pointer;
-        transition: all 0.15s;
-        font-size: 0.82rem; color: var(--ink-dim);
-    }
-    .no-style-card.selected {
-        border-color: var(--ink); border-style: solid;
-        background: var(--panel-2); color: var(--ink); font-weight: 600;
-    }
-
-    .control-row { margin-bottom: 0.9rem; }
-    .control-row:last-child { margin-bottom: 0; }
+    .control-row { margin-bottom: 0.7rem; }
     .control-label {
-        display: block; font-size: 0.72rem; color: var(--ink-dim);
-        margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em;
-        font-weight: 600;
+        display: block; font-size: 0.7rem; color: var(--ink-dim);
+        margin-bottom: 0.35rem; text-transform: uppercase;
+        letter-spacing: 0.06em; font-weight: 600;
     }
     select {
-        width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px;
+        width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px;
         border: 1px solid var(--border); background: #fafafa;
-        color: var(--ink); font-family: inherit; font-size: 0.88rem;
+        color: var(--ink); font-family: inherit; font-size: 0.85rem;
         -webkit-appearance: none; appearance: none;
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%231a1a1a' d='M0 0l5 6 5-6z'/></svg>");
-        background-repeat: no-repeat;
-        background-position: right 0.9rem center;
+        background-repeat: no-repeat; background-position: right 0.8rem center;
         background-size: 10px;
     }
-    select:focus { outline: none; border-color: var(--ink); }
 
     .btn-primary {
-        width: 100%; padding: 1.1rem; border-radius: var(--radius);
+        width: 100%; padding: 1rem; border-radius: var(--radius);
         border: none; background: var(--ink); color: #fff;
-        font-size: 1rem; font-weight: 600; font-family: inherit;
-        cursor: pointer; transition: opacity 0.2s, transform 0.1s;
-        margin-bottom: 1rem;
+        font-size: 0.95rem; font-weight: 600; cursor: pointer;
+        margin-bottom: 0.8rem;
     }
-    .btn-primary:active:not(:disabled) { transform: scale(0.98); }
     .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .btn-stop {
-        width: 100%; padding: 0.8rem; border-radius: var(--radius);
+        width: 100%; padding: 0.7rem; border-radius: var(--radius);
         border: 1px solid var(--border); background: var(--panel);
         color: var(--error); font-size: 0.85rem; font-weight: 600;
-        font-family: inherit; cursor: pointer; margin-bottom: 1rem;
-        display: none;
+        cursor: pointer; margin-bottom: 0.8rem; display: none;
     }
     .btn-stop.visible { display: block; }
 
-    .btn-clear-history {
-        width: 100%; padding: 0.6rem; border-radius: 8px;
-        border: 1px solid var(--border); background: transparent;
-        color: var(--ink-dim); font-size: 0.75rem; font-weight: 500;
-        font-family: inherit; cursor: pointer; margin-bottom: 1rem;
-    }
-
-    .queue { margin-top: 1rem; }
     .queue-summary {
         background: var(--panel); border: 1px solid var(--border);
-        border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.6rem;
-        font-size: 0.78rem; display: flex; justify-content: space-between;
-        align-items: center; flex-wrap: wrap; gap: 0.4rem;
+        border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem;
+        font-size: 0.75rem; display: flex; justify-content: space-between;
     }
-    .queue-summary .progress-text { color: var(--ink); font-weight: 600; }
-    .queue-summary .eta-text { color: var(--ink-dim); }
-
     .queue-item {
-        display: flex; align-items: center; gap: 0.8rem;
-        padding: 0.7rem 0.8rem; border-radius: 8px;
-        border: 1px solid var(--border); margin-bottom: 0.4rem;
-        background: var(--panel); transition: border-color 0.3s, opacity 0.3s;
-        font-size: 0.82rem;
+        display: flex; align-items: center; gap: 0.7rem;
+        padding: 0.6rem 0.7rem; border-radius: 8px;
+        border: 1px solid var(--border); margin-bottom: 0.3rem;
+        background: var(--panel); font-size: 0.78rem;
     }
     .queue-item.pending { opacity: 0.5; }
     .queue-item.creating { border-color: var(--warn); }
     .queue-item.processing { border-color: var(--ink); }
     .queue-item.done { border-color: var(--success); }
     .queue-item.failed { border-color: var(--error); }
-    .queue-item .q-icon { font-size: 1rem; width: 1.5rem; text-align: center; flex-shrink: 0; }
-    .queue-item .q-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .queue-item .q-status { font-size: 0.72rem; color: var(--ink-dim); text-align: right; flex-shrink: 0; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .q-name { flex: 1; min-width: 0; }
+    .q-status { font-size: 0.7rem; color: var(--ink-dim); }
 
-    .queue-more { text-align: center; padding: 0.5rem; color: var(--ink-dim); font-size: 0.75rem; font-style: italic; }
-
-    .gallery { margin-top: 1.5rem; }
     .gallery-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 0.8rem;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 0.6rem;
     }
     .gallery-item {
         border-radius: var(--radius); overflow: hidden;
         border: 1px solid var(--border); background: #000;
-        animation: fadeIn 0.4s ease;
     }
-    .gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; background:#000; }
+    .gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
     .gallery-item .g-caption {
         padding: 0.4rem 0.6rem; background: var(--panel);
-        font-size: 0.7rem; color: var(--ink-dim);
-        display: flex; justify-content: space-between; align-items: center; gap: 0.3rem;
-    }
-    .gallery-item .g-delete {
-        background: transparent; border: none; color: var(--error);
-        font-size: 0.85rem; cursor: pointer; padding: 0.1rem 0.3rem;
+        font-size: 0.68rem; color: var(--ink-dim);
+        display: flex; justify-content: space-between; align-items: center;
     }
 
     .status-bar {
@@ -329,109 +266,86 @@
     .status-bar .spinner {
         width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3);
         border-top-color: #fff; border-radius: 50%;
-        animation: spin 0.8s linear infinite; flex-shrink: 0;
+        animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    #noSleepCanvas { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
-    #noSleepVideo { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
+    #noSleepCanvas, #noSleepVideo {
+        position: fixed; top: 0; left: 0; width: 1px; height: 1px;
+        opacity: 0.01; pointer-events: none; z-index: -1;
+    }
 </style>
 </head>
 <body>
 
 <header>
     <h1>Atelier Vidéo</h1>
-    <p class="subtitle">Votre photo devient une publicité</p>
+    <p class="subtitle">60+ modes pour créer des vidéos IA</p>
 </header>
-
-<div class="info-banner">
-    <strong>Mode Publicité :</strong> Importez la photo de votre produit.
-    Écrivez votre <strong>accroche</strong>, votre <strong>argument</strong> et votre <strong>appel à l'action</strong>.
-    L'IA génère une vidéo 9:16 prête pour TikTok, Reels, YouTube Shorts.
-</div>
 
 <div class="api-panel" id="api-panel">
     <input type="password" class="api-key-input" id="api-key-input"
-           placeholder="Collez votre clé API ici (sk-...)" autocomplete="off" spellcheck="false">
+           placeholder="Clé API (sk-...)" autocomplete="off">
     <button type="button" class="api-save-btn" id="api-save-btn">Enregistrer la clé</button>
     <div class="api-status-line" id="api-status-line">
         <span class="status-dot"></span>
-        <span id="api-status-text">Aucune clé API enregistrée</span>
-    </div>
-    <div class="api-hint">
-        Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank" rel="noopener">platform.agnes-ai.com</a> → Settings → API Keys
-    </div>
-    <div class="stat-line" id="stat-line">
-        <span>📊 Vitesse moyenne : <span id="stat-speed">en attente</span></span>
-        <span id="stat-samples">0 génération</span>
-    </div>
-    <div class="wake-status" id="wake-status">
-        <span id="wake-status-text">💤 Veille automatique</span>
-        <button type="button" id="wake-toggle-btn">Garder l'écran allumé</button>
+        <span id="api-status-text">Aucune clé API</span>
     </div>
 </div>
 
-<div class="upload-zone" id="upload-zone">
-    <input type="file" id="file-input" accept="image/*">
-    <div class="upload-icon">＋</div>
-    <div class="upload-text">Ajoutez la photo de votre produit</div>
-    <div class="upload-hint">Une seule image suffit</div>
-</div>
-
-<div class="images-grid" id="images-grid"></div>
-
-<div class="section open" id="section-pub">
-    <div class="section-header" data-toggle="section-pub">
-        <span class="section-title">📢 Votre publicité <span class="badge soft">essentiel</span></span>
+<div class="section open" id="section-mode">
+    <div class="section-header" data-toggle="section-mode">
+        <span class="section-title">🎬 Mode de génération</span>
         <span class="chevron">▼</span>
     </div>
     <div class="section-body">
         <div class="section-content">
-            <div class="control-row">
-                <label class="control-label">Nom du produit / marque</label>
-                <input type="text" id="product-name" placeholder="Ex : Naéria, Nike Air, Mon Café...">
+            <div class="mode-current" id="mode-current">
+                <div class="m-emoji" id="mc-emoji">📢</div>
+                <div class="m-info">
+                    <div class="m-name" id="mc-name">Publicité Produit</div>
+                    <div class="m-desc" id="mc-desc">Spot pub pro</div>
+                </div>
+                <div class="m-num" id="mc-num">#294</div>
             </div>
-            <div class="control-row">
-                <label class="control-label">Accroche (3 premières secondes)</label>
-                <textarea id="hook-text" placeholder="Ex : Tu fumes encore entre les matchs ?"></textarea>
-            </div>
-            <div class="control-row">
-                <label class="control-label">Argument principal</label>
-                <textarea id="benefit-text" placeholder="Ex : Naéria t'aide à casser l'habitude, naturellement."></textarea>
-            </div>
-            <div class="control-row">
-                <label class="control-label">Appel à l'action (fin de vidéo)</label>
-                <textarea id="cta-text" placeholder="Ex : Essaie Naéria sur naeria.fr"></textarea>
-            </div>
+            <input type="text" class="mode-search" id="mode-search" placeholder="Rechercher un mode...">
+            <div class="mode-list" id="mode-list"></div>
         </div>
     </div>
 </div>
 
-<div class="section" id="section-style">
-    <div class="section-header" data-toggle="section-style">
-        <span class="section-title">🎨 Ambiance publicitaire <span class="badge">optionnel</span></span>
+<div class="upload-zone" id="upload-zone">
+    <input type="file" id="file-input" accept="image/*" multiple>
+    <div class="upload-icon">＋</div>
+    <div class="upload-text">Ajoutez vos images</div>
+    <div class="upload-hint">Une ou plusieurs — chacune deviendra une vidéo</div>
+</div>
+<div class="images-grid" id="images-grid"></div>
+
+<div class="section" id="section-prompt">
+    <div class="section-header" data-toggle="section-prompt">
+        <span class="section-title">✍️ Votre direction (optionnel)</span>
         <span class="chevron">▼</span>
     </div>
     <div class="section-body">
         <div class="section-content">
-            <div class="styles-grid" id="styles-grid"></div>
+            <textarea id="main-prompt" placeholder="Décrivez ce que vous voulez en plus... Ex : ajoute un vent léger, ambiance chaleureuse, garde le sujet identique."></textarea>
         </div>
     </div>
 </div>
 
 <div class="section" id="section-tech">
     <div class="section-header" data-toggle="section-tech">
-        <span class="section-title">📷 Réglages techniques</span>
+        <span class="section-title">📷 Réglages</span>
         <span class="chevron">▼</span>
     </div>
     <div class="section-body">
         <div class="section-content">
             <div class="control-row">
-                <label class="control-label">Durée de la pub</label>
+                <label class="control-label">Durée</label>
                 <select id="duration-select">
                     <option value="121">5 secondes</option>
-                    <option value="153" selected>6,4 secondes (recommandé)</option>
+                    <option value="153" selected>6,4 secondes</option>
                     <option value="241">10 secondes</option>
                 </select>
             </div>
@@ -439,13 +353,13 @@
                 <label class="control-label">Cadrage</label>
                 <select id="framing-select">
                     <option value="random">Aléatoire</option>
-                    <option value="close">Très serré (gros plan produit)</option>
-                    <option value="medium">Moyen (buste)</option>
-                    <option value="wide">Large (plan large)</option>
+                    <option value="close">Très serré</option>
+                    <option value="medium">Moyen</option>
+                    <option value="wide">Large</option>
                 </select>
             </div>
             <div class="control-row">
-                <label class="control-label">Intensité du mouvement</label>
+                <label class="control-label">Intensité</label>
                 <select id="intensity-select">
                     <option value="random">Aléatoire</option>
                     <option value="subtle">Subtile</option>
@@ -458,21 +372,17 @@
 </div>
 
 <button type="button" class="btn-primary" id="generate-btn" disabled>
-    Créer la publicité
+    Créer les vidéos
 </button>
 
 <button type="button" class="btn-stop" id="stop-btn">
-    ⏹ Arrêter la génération
+    ⏹ Arrêter
 </button>
 
-<button type="button" class="btn-clear-history" id="clear-history-btn" style="display:none;">
-    🗑 Effacer l'historique local
-</button>
-
-<div class="queue" id="queue" style="display:none;"></div>
+<div id="queue" style="display:none;"></div>
 
 <div class="gallery" id="gallery" style="display:none;">
-    <div class="section-title" style="margin-bottom:0.8rem;">Vos publicités</div>
+    <div class="section-title" style="margin-bottom:0.6rem;">Vos vidéos</div>
     <div class="gallery-grid" id="gallery-grid"></div>
 </div>
 
@@ -482,17 +392,15 @@
 </div>
 
 <div class="toast" id="toast">
-    <span class="toast-icon" id="toast-icon">✓</span>
     <span id="toast-text">Message</span>
 </div>
 
 <canvas id="noSleepCanvas" width="2" height="2"></canvas>
 <video id="noSleepVideo" playsinline muted loop></video>
 
+<script src="modes.js"></script>
+
 <script>
-// ══════════════════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════════════════
 const API_BASE = 'https://apihub.agnes-ai.com/v1';
 const POLL_BASE = 'https://apihub.agnes-ai.com/agnesapi';
 const MODEL_VIDEO = 'agnes-video-v2.0';
@@ -500,31 +408,26 @@ const FRAME_RATE = 24;
 
 let createIntervalMs = 62000;
 const CREATE_INTERVAL_MIN = 62000;
-const CREATE_INTERVAL_MAX = 90000;
-const CREATE_INTERVAL_SAFE = 75000;
 const POLL_INTERVAL_SEC = 8;
 const MAX_POLL_ATTEMPTS = 100;
-
-const TIMING_CACHE_KEY = 'agnes_pub_timing_cache_v1';
 const API_KEY_STORAGE = 'agnes_api_key';
-const WAKE_LOCK_PREF = 'agnes_wakelock_enabled';
-const MAX_VISIBLE_QUEUE = 30;
 const MAX_IMAGE_SIZE = 12 * 1024 * 1024;
 const THUMBNAIL_MAX_WIDTH = 200;
 
-// ══════════════════════════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════════════════════════
+const state = {
+    images: [], isRunning: false, stopRequested: false,
+    queue: [], completed: 0, failed: 0,
+    currentMode: null, framing: 'random', intensity: 'random',
+    durationFrames: 153, isLoadingImages: false
+};
+
 let toastTimeout = null;
-function showToast(message, type = 'success', duration = 2500) {
+function showToast(message, type = 'success', duration = 2200) {
     const toast = document.getElementById('toast');
-    const icon = document.getElementById('toast-icon');
     const text = document.getElementById('toast-text');
-    if (!toast || !icon || !text) return;
+    if (!toast || !text) return;
     toast.classList.remove('visible', 'success', 'error', 'warn');
     void toast.offsetWidth;
-    const icons = { success: '✓', error: '✕', warn: '⚠' };
-    icon.textContent = icons[type] || '✓';
     text.textContent = message;
     toast.classList.add(type);
     requestAnimationFrame(() => toast.classList.add('visible'));
@@ -532,627 +435,227 @@ function showToast(message, type = 'success', duration = 2500) {
     toastTimeout = setTimeout(() => toast.classList.remove('visible'), duration);
 }
 
-// ══════════════════════════════════════════════════════════════════
-// INDEXEDDB — SAUVEGARDE DES VIDÉOS
-// ══════════════════════════════════════════════════════════════════
-let dbPromise = null;
-function openVideoDB() {
-    if (dbPromise) return dbPromise;
-    dbPromise = new Promise((resolve, reject) => {
-        const req = indexedDB.open('AtelierVideoDB', 1);
-        req.onupgradeneeded = (e) => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains('videos')) {
-                const store = db.createObjectStore('videos', { keyPath: 'id', autoIncrement: true });
-                store.createIndex('date', 'date', { unique: false });
-            }
-        };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
+function renderModes(filter = '') {
+    const list = document.getElementById('mode-list');
+    const f = filter.toLowerCase().trim();
+    const filtered = MODES.filter(m =>
+        !f || m.name.toLowerCase().includes(f)
+             || m.cat.toLowerCase().includes(f)
+             || m.desc.toLowerCase().includes(f)
+    );
+    const groups = {};
+    filtered.forEach(m => {
+        if (!groups[m.cat]) groups[m.cat] = [];
+        groups[m.cat].push(m);
     });
-    return dbPromise;
-}
-
-async function saveVideoToDB(videoUrl, label) {
-    try {
-        const db = await openVideoDB();
-        const tx = db.transaction('videos', 'readwrite');
-        const store = tx.objectStore('videos');
-        store.add({ url: videoUrl, label: label, date: Date.now() });
-        return new Promise((resolve) => { tx.oncomplete = () => resolve(true); });
-    } catch (e) { console.warn('IndexedDB save échec :', e); return false; }
-}
-
-async function loadVideosFromDB() {
-    try {
-        const db = await openVideoDB();
-        const tx = db.transaction('videos', 'readonly');
-        const store = tx.objectStore('videos');
-        const req = store.getAll();
-        return new Promise((resolve) => {
-            req.onsuccess = () => resolve(req.result || []);
-            req.onerror = () => resolve([]);
+    let html = '';
+    Object.keys(groups).forEach(cat => {
+        html += '<div class="mode-category">' + cat + '</div>';
+        groups[cat].forEach(m => {
+            const selected = state.currentMode && state.currentMode.id === m.id ? 'selected' : '';
+            html += '<div class="mode-item ' + selected + '" data-mode="' + m.id + '">' +
+                '<div class="mi-emoji">' + m.emoji + '</div>' +
+                '<div class="mi-info">' +
+                    '<div class="mi-name">' + m.name + '</div>' +
+                    '<div class="mi-desc">' + m.desc + '</div>' +
+                '</div>' +
+                '<div class="mi-num">#' + m.num + '</div>' +
+            '</div>';
         });
-    } catch (e) { return []; }
-}
-
-async function deleteVideoFromDB(id) {
-    try {
-        const db = await openVideoDB();
-        const tx = db.transaction('videos', 'readwrite');
-        const store = tx.objectStore('videos');
-        store.delete(id);
-        return new Promise((resolve) => { tx.oncomplete = () => resolve(true); });
-    } catch (e) { return false; }
-}
-
-async function clearAllVideos() {
-    try {
-        const db = await openVideoDB();
-        const tx = db.transaction('videos', 'readwrite');
-        const store = tx.objectStore('videos');
-        store.clear();
-        return new Promise((resolve) => { tx.oncomplete = () => resolve(true); });
-    } catch (e) { return false; }
-}
-
-// ══════════════════════════════════════════════════════════════════
-// ANTI-VEILLE
-// ══════════════════════════════════════════════════════════════════
-let wakeLockSentinel = null;
-let wakeLockEnabled = false;
-let canvasStream = null;
-let canvasInterval = null;
-
-function isWakeLockSupported() {
-    return 'wakeLock' in navigator && typeof navigator.wakeLock.request === 'function';
-}
-
-async function requestWakeLockAPI() {
-    if (!isWakeLockSupported()) return false;
-    try {
-        wakeLockSentinel = await navigator.wakeLock.request('screen');
-        wakeLockSentinel.addEventListener('release', () => {
-            wakeLockSentinel = null;
-            updateWakeStatus();
+    });
+    list.innerHTML = html;
+    list.querySelectorAll('[data-mode]').forEach(el => {
+        el.addEventListener('click', () => {
+            const mode = MODES.find(m => m.id === el.dataset.mode);
+            if (mode) {
+                state.currentMode = mode;
+                updateModeCurrent();
+                renderModes(document.getElementById('mode-search').value);
+                showToast('Mode : ' + mode.name, 'success', 1500);
+            }
         });
-        return true;
-    } catch (e) { return false; }
+    });
 }
 
-async function releaseWakeLockAPI() {
-    if (wakeLockSentinel) {
-        try { await wakeLockSentinel.release(); } catch (e) {}
-        wakeLockSentinel = null;
-    }
+function updateModeCurrent() {
+    const m = state.currentMode;
+    if (!m) return;
+    document.getElementById('mc-emoji').textContent = m.emoji;
+    document.getElementById('mc-name').textContent = m.name;
+    document.getElementById('mc-desc').textContent = m.desc;
+    document.getElementById('mc-num').textContent = '#' + m.num;
 }
 
-function startCanvasStream() {
-    if (canvasStream) return true;
-    try {
-        const canvas = document.getElementById('noSleepCanvas');
-        const video = document.getElementById('noSleepVideo');
-        if (!canvas || !video) return false;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return false;
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        if (typeof canvas.captureStream !== 'function') return false;
-        canvasStream = canvas.captureStream(1);
-        let toggle = false;
-        canvasInterval = setInterval(() => {
-            toggle = !toggle;
-            ctx.fillStyle = toggle ? '#000000' : '#010101';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }, 1000);
-        video.srcObject = canvasStream;
-        video.muted = true;
-        video.playsInline = true;
-        const p = video.play();
-        if (p && p.catch) p.catch(() => {});
-        return true;
-    } catch (e) { return false; }
+function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function buildPrompt() {
+    const mode = state.currentMode;
+    if (!mode) return '';
+    const parts = [];
+    parts.push(mode.basePrompt);
+    parts.push('The subject must remain IDENTICAL to the source image: same face, same expression, same clothing, same identity, same composition. This is a CONTINUATION, not a re-imagination.');
+    const userPrompt = document.getElementById('main-prompt')?.value.trim();
+    if (userPrompt) parts.push('Additional direction (highest priority, must not change subject identity): ' + userPrompt);
+    const framingMap = {
+        close: 'extreme close-up framing, tight on the subject',
+        medium: 'medium shot, subject framed from waist up',
+        wide: 'wide shot with the environment visible'
+    };
+    if (state.framing !== 'random' && framingMap[state.framing]) parts.push(framingMap[state.framing]);
+    const intensityMap = {
+        subtle: 'very subtle movement, barely perceptible, gentle',
+        moderate: 'moderate movement, clear but controlled',
+        strong: 'strong dynamic movement, energetic'
+    };
+    if (state.intensity !== 'random' && intensityMap[state.intensity]) parts.push(intensityMap[state.intensity]);
+    else parts.push('moderate movement, controlled');
+    parts.push(randomItem(mode.actions));
+    parts.push(randomItem(mode.cameras));
+    parts.push(randomItem(mode.lights));
+    parts.push('Portrait 9:16 vertical, 24fps, no text, no subtitles, no watermarks');
+    return parts.join('. ');
 }
 
-function stopCanvasStream() {
-    if (canvasInterval) { clearInterval(canvasInterval); canvasInterval = null; }
-    const video = document.getElementById('noSleepVideo');
-    if (video) { try { video.pause(); video.srcObject = null; } catch (e) {} }
-    if (canvasStream) {
-        try { canvasStream.getTracks().forEach(t => t.stop()); } catch (e) {}
-        canvasStream = null;
-    }
-}
-
-async function activateWakeLock() {
-    let success = false;
-    if (isWakeLockSupported()) success = await requestWakeLockAPI();
-    if (!success) success = startCanvasStream();
-    if (!success && !canvasStream) success = startCanvasStream();
-    return success;
-}
-
-async function deactivateWakeLock() {
-    await releaseWakeLockAPI();
-    stopCanvasStream();
-}
-
-function updateWakeStatus() {
-    const el = document.getElementById('wake-status');
-    const txt = document.getElementById('wake-status-text');
-    const btn = document.getElementById('wake-toggle-btn');
-    if (!el || !txt || !btn) return;
-    el.classList.remove('active', 'warn');
-    const hasAny = isWakeLockSupported() || (document.getElementById('noSleepCanvas')?.captureStream);
-    if (!hasAny) {
-        el.classList.add('warn');
-        txt.textContent = '⚠️ Non supporté';
-        btn.style.display = 'none';
-        return;
-    }
-    btn.style.display = 'inline-block';
-    const isActive = wakeLockSentinel !== null || canvasStream !== null;
-    if (wakeLockEnabled && isActive) {
-        el.classList.add('active');
-        txt.textContent = '✅ Écran allumé';
-        btn.textContent = 'Désactiver';
-    } else if (wakeLockEnabled && !isActive) {
-        el.classList.add('warn');
-        txt.textContent = '⏳ En attente';
-        btn.textContent = 'Désactiver';
-    } else {
-        txt.textContent = '💤 Veille automatique';
-        btn.textContent = 'Garder allumé';
-    }
-}
-
-async function toggleWakeLock() {
-    if (wakeLockEnabled) {
-        wakeLockEnabled = false;
-        await deactivateWakeLock();
-        try { localStorage.setItem(WAKE_LOCK_PREF, '0'); } catch (e) {}
-        showToast('Veille automatique', 'warn');
-    } else {
-        wakeLockEnabled = true;
-        const ok = await activateWakeLock();
-        try { localStorage.setItem(WAKE_LOCK_PREF, '1'); } catch (e) {}
-        if (ok) showToast('Écran restera allumé', 'success');
-        else showToast('Activez dans les réglages', 'warn');
-    }
-    updateWakeStatus();
-}
-
-document.addEventListener('visibilitychange', async () => {
-    if (document.visibilityState === 'visible' && wakeLockEnabled) {
-        await activateWakeLock();
-        updateWakeStatus();
-    }
-});
-
-async function ensureWakeLockActive() {
-    if (!wakeLockEnabled) return;
-    if (wakeLockSentinel === null && canvasStream === null) {
-        await activateWakeLock();
-        updateWakeStatus();
-    }
-}
-
-// ══════════════════════════════════════════════════════════════════
-// CACHE DES TEMPS
-// ══════════════════════════════════════════════════════════════════
-function loadTimingCache() {
-    try { return JSON.parse(localStorage.getItem(TIMING_CACHE_KEY) || '{}'); }
-    catch (e) { return {}; }
-}
-function saveTimingCache(cache) {
-    try { localStorage.setItem(TIMING_CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
-}
-function recordGenerationTime(numFrames, durationMs) {
-    const cache = loadTimingCache();
-    const key = String(numFrames);
-    if (!cache[key]) cache[key] = [];
-    cache[key].push(durationMs);
-    if (cache[key].length > 10) cache[key] = cache[key].slice(-10);
-    saveTimingCache(cache);
-    updateTimingDisplay();
-}
-function estimateGenerationTime(numFrames) {
-    const cache = loadTimingCache();
-    const samples = cache[String(numFrames)];
-    if (samples && samples.length > 0) {
-        const sorted = [...samples].sort((a, b) => a - b);
-        const mid = Math.floor(sorted.length / 2);
-        return sorted.length % 2 === 0 ? (sorted[mid-1] + sorted[mid]) / 2 : sorted[mid];
-    }
-    return 30000 + numFrames * 500;
-}
-function updateTimingDisplay() {
-    const cache = loadTimingCache();
-    const all = Object.values(cache).flat();
-    const speedEl = document.getElementById('stat-speed');
-    const samplesEl = document.getElementById('stat-samples');
-    if (!speedEl || !samplesEl) return;
-    if (all.length === 0) {
-        speedEl.textContent = 'en attente';
-        samplesEl.textContent = '0 génération';
-        return;
-    }
-    const avg = all.reduce((a, b) => a + b, 0) / all.length;
-    speedEl.textContent = (avg / 1000).toFixed(1) + ' s en moyenne';
-    samplesEl.textContent = all.length + ' génération' + (all.length > 1 ? 's' : '');
-}
-
-// ══════════════════════════════════════════════════════════════════
-// AMBIANCES PUBLICITAIRES
-// ══════════════════════════════════════════════════════════════════
-const PUB_AMBIANCES = [
-    { id: 'lifestyle', name: 'Lifestyle', emoji: '☀️', desc: 'Lumière naturelle',
-      prompt: 'bright lifestyle commercial aesthetic, natural daylight, authentic candid feel, clean and optimistic atmosphere. Preserve the exact product and subject identity.' },
-    { id: 'premium', name: 'Premium', emoji: '💎', desc: 'Luxe, sombre, élégant',
-      prompt: 'premium luxury commercial aesthetic, dark elegant background, dramatic rim lighting, glossy reflections, high-end feel. Preserve the exact product and subject identity.' },
-    { id: 'sport', name: 'Sport & Énergie', emoji: '⚡', desc: 'Dynamique, puissant',
-      prompt: 'dynamic sports commercial aesthetic, energetic motion, contrasting light, sweat and intensity, powerful atmosphere. Preserve the exact product and subject identity.' },
-    { id: 'nature', name: 'Nature & Bien-être', emoji: '🌿', desc: 'Vert, sain, apaisant',
-      prompt: 'natural wellness commercial aesthetic, soft green tones, organic textures, calm and healthy atmosphere. Preserve the exact product and subject identity.' },
-    { id: 'tech', name: 'Tech & Futur', emoji: '🚀', desc: 'High-tech, épuré',
-      prompt: 'high-tech commercial aesthetic, clean minimal background, cool blue tones, futuristic feel. Preserve the exact product and subject identity.' },
-    { id: 'food', name: 'Food & Gourmand', emoji: '🍽️', desc: 'Appétissant, chaleureux',
-      prompt: 'appetizing food commercial aesthetic, warm inviting tones, steam and texture details, mouth-watering feel. Preserve the exact product and subject identity.' },
-    { id: 'beauty', name: 'Beauté & Soin', emoji: '🌸', desc: 'Doux, lumineux, raffiné',
-      prompt: 'beauty and skincare commercial aesthetic, soft diffused light, pastel tones, silky textures, refined atmosphere. Preserve the exact product and subject identity.' },
-    { id: 'urban', name: 'Urbain', emoji: '🌆', desc: 'Ville, moderne',
-      prompt: 'urban commercial aesthetic, city backdrop, modern cool tones, dynamic street vibe. Preserve the exact product and subject identity.' },
-    { id: 'vintage-pub', name: 'Vintage Pub', emoji: '📻', desc: 'Rétro, chaleureux',
-      prompt: 'vintage advertising aesthetic, warm faded colors, retro typography vibes, nostalgic atmosphere. Preserve the exact product and subject identity.' },
-    { id: 'minimal', name: 'Minimaliste', emoji: '⬜', desc: 'Épuré, fond neutre',
-      prompt: 'minimalist commercial aesthetic, clean neutral background, simple elegant composition, product-focused. Preserve the exact product and subject identity.' },
-    { id: 'neon', name: 'Néon Nocturne', emoji: '🌃', desc: 'Nuit, couleurs vives',
-      prompt: 'neon night commercial aesthetic, vivid colored lights, wet reflections, energetic urban night atmosphere. Preserve the exact product and subject identity.' },
-    { id: 'sunset', name: 'Golden Hour', emoji: '🌅', desc: 'Chaleur dorée',
-      prompt: 'golden hour commercial aesthetic, warm amber glow, long shadows, dreamy warm atmosphere. Preserve the exact product and subject identity.' }
-];
-
-const RANDOM_ACTIONS = [
-    'the subject slowly raises the product toward the camera, catching the light',
-    'the subject turns their head slightly, eyes confident, product held steady',
-    'a gentle breeze moves the hair and fabric, product remains perfectly framed',
-    'the subject smiles subtly, breathing naturally, product presented with pride',
-    'the subject\'s hand adjusts the product slightly, drawing attention to it',
-    'the subject stands still, chest rising and falling, product glowing softly'
-];
-
-const RANDOM_CAMERA = [
-    'slow dolly-in, camera gliding forward toward the product',
-    'static locked-off frame, subject and product move subtly within',
-    'handheld, slight organic tremor, intimate commercial feel',
-    'slow push-in on the product, shallow depth of field',
-    'subtle parallax movement revealing depth behind the subject',
-    'slow arc movement around the subject, product stays centered'
-];
-
-const RANDOM_LIGHTING = [
-    'soft diffused commercial light',
-    'warm golden backlight with rim highlights',
-    'dramatic side lighting with glossy product highlights',
-    'clean ambient light, almost shadowless, product-focused',
-    'cool moonlight atmosphere with silver product reflections',
-    'warm interior glow with subtle lens flare'
-];
-
-const INTENSITY_PRESETS = {
-    subtle: 'very subtle movement, barely perceptible change, minimal animation, gentle and quiet',
-    moderate: 'moderate movement, clear but controlled motion, balanced energy',
-    strong: 'strong dynamic movement, energetic motion, pronounced physical action'
-};
-
-const FRAMING_PRESETS = {
-    close: 'extreme close-up framing, tight on the product, intimate and intense',
-    medium: 'medium shot, subject framed from waist up, product clearly visible',
-    wide: 'wide shot, subject framed with the environment visible'
-};
-
-// ══════════════════════════════════════════════════════════════════
-// ÉTAT
-// ══════════════════════════════════════════════════════════════════
-const state = {
-    images: [],
-    isRunning: false,
-    stopRequested: false,
-    queue: [],
-    completed: 0,
-    failed: 0,
-    selectedAmbiance: 'lifestyle',
-    framing: 'random',
-    intensity: 'random',
-    durationFrames: 153,
-    isLoadingImages: false,
-    creationAttemptsSinceLastError: 0
-};
-
-// ══════════════════════════════════════════════════════════════════
-// CLÉ API
-// ══════════════════════════════════════════════════════════════════
 function getApiKey() {
-    try { return (localStorage.getItem(API_KEY_STORAGE) || '').trim(); }
-    catch (e) { return ''; }
+    try { return (localStorage.getItem(API_KEY_STORAGE) || '').trim(); } catch (e) { return ''; }
 }
-
 function saveApiKey() {
     const input = document.getElementById('api-key-input');
-    if (!input) return;
     const key = input.value.trim();
     if (!key) {
         try { localStorage.removeItem(API_KEY_STORAGE); } catch (e) {}
-        updateApiPanel();
-        showToast('Clé supprimée', 'warn');
-        return;
+        updateApiPanel(); showToast('Clé supprimée', 'warn'); return;
     }
     try {
         localStorage.setItem(API_KEY_STORAGE, key);
-        updateApiPanel();
-        showToast('Clé API enregistrée ✓', 'success');
-        input.blur();
-    } catch (e) { showToast('Erreur de sauvegarde', 'error'); }
+        updateApiPanel(); showToast('Clé enregistrée ✓'); input.blur();
+    } catch (e) { showToast('Erreur', 'error'); }
 }
-
 function updateApiPanel() {
     const panel = document.getElementById('api-panel');
     const input = document.getElementById('api-key-input');
-    const statusLine = document.getElementById('api-status-line');
-    const statusText = document.getElementById('api-status-text');
+    const line = document.getElementById('api-status-line');
+    const text = document.getElementById('api-status-text');
     const key = getApiKey();
-    if (!panel || !input || !statusLine || !statusText) return;
     if (key) {
-        panel.classList.add('ok');
-        statusLine.classList.add('ok');
-        statusText.textContent = 'Clé active · ' + key.slice(0, 8) + '…' + key.slice(-4);
+        panel.classList.add('ok'); line.classList.add('ok');
+        text.textContent = 'Clé active · ' + key.slice(0, 8) + '…' + key.slice(-4);
         input.value = key;
-        input.placeholder = '';
     } else {
-        panel.classList.remove('ok');
-        statusLine.classList.remove('ok');
-        statusText.textContent = 'Aucune clé API enregistrée';
-        input.value = '';
-        input.placeholder = 'Collez votre clé API ici (sk-...)';
+        panel.classList.remove('ok'); line.classList.remove('ok');
+        text.textContent = 'Aucune clé API'; input.value = '';
     }
     updateGenerateBtn();
 }
-
 function updateGenerateBtn() {
     const btn = document.getElementById('generate-btn');
     if (!btn) return;
     const hasImages = state.images.length > 0;
     const hasKey = !!getApiKey();
-    btn.disabled = !hasImages || !hasKey || state.isRunning || state.isLoadingImages;
+    btn.disabled = !hasImages || !hasKey || state.isRunning || state.isLoadingImages || !state.currentMode;
     if (state.isLoadingImages) btn.textContent = 'Chargement…';
-    else if (state.isRunning) btn.textContent = 'Création en cours…';
+    else if (state.isRunning) btn.textContent = 'Création…';
     else if (!hasKey) btn.textContent = 'Ajoutez votre clé API';
-    else if (!hasImages) btn.textContent = 'Ajoutez une image';
-    else btn.textContent = 'Créer la publicité';
+    else if (!hasImages) btn.textContent = 'Ajoutez des images';
+    else btn.textContent = 'Créer ' + state.images.length + ' vidéo' + (state.images.length > 1 ? 's' : '');
 }
 
-// ══════════════════════════════════════════════════════════════════
-// UTILITAIRES
-// ══════════════════════════════════════════════════════════════════
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function log(msg) { console.log('[Pub] ' + msg); }
 function setStatus(text) {
     const bar = document.getElementById('status-bar');
     const txt = document.getElementById('status-text');
-    if (!bar || !txt) return;
     if (text) { bar.classList.add('visible'); txt.textContent = text; }
     else bar.classList.remove('visible');
 }
-function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-}
-function formatEta(seconds) {
-    if (seconds < 60) return Math.round(seconds) + 's';
-    const m = Math.floor(seconds / 60);
-    const s = Math.round(seconds % 60);
-    return m + 'm' + (s > 0 ? ' ' + s + 's' : '');
-}
 
-// ══════════════════════════════════════════════════════════════════
-// TRAITEMENT IMAGE
-// ══════════════════════════════════════════════════════════════════
 function fileToDataUri(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = e => resolve(e.target.result);
-        reader.onerror = () => reject(new Error('Erreur lecture'));
+        reader.onerror = () => reject(new Error('Erreur'));
         reader.readAsDataURL(file);
     });
 }
-
 function generateThumbnail(dataUri) {
     return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
             try {
-                const canvas = document.createElement('canvas');
+                const c = document.createElement('canvas');
                 const ratio = img.height / img.width;
-                canvas.width = THUMBNAIL_MAX_WIDTH;
-                canvas.height = Math.round(THUMBNAIL_MAX_WIDTH * ratio);
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                resolve(canvas.toDataURL('image/jpeg', 0.7));
+                c.width = THUMBNAIL_MAX_WIDTH;
+                c.height = Math.round(THUMBNAIL_MAX_WIDTH * ratio);
+                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                resolve(c.toDataURL('image/jpeg', 0.7));
             } catch (e) { resolve(dataUri); }
         };
         img.onerror = () => resolve(dataUri);
         img.src = dataUri;
     });
 }
-
 async function processOneFile(file) {
-    if (!file.type.startsWith('image/')) return null;
-    if (file.size > MAX_IMAGE_SIZE) { log('Trop lourde : ' + file.name); return null; }
+    if (!file.type.startsWith('image/') || file.size > MAX_IMAGE_SIZE) return null;
     try {
         const dataUri = await fileToDataUri(file);
         const thumbnail = await generateThumbnail(dataUri);
-        return { file, dataUri, thumbnail, id: Date.now() + Math.random() };
+        return { dataUri, thumbnail, id: Date.now() + Math.random() };
     } catch (e) { return null; }
 }
-
 async function handleFiles(files) {
-    const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
-    if (!imageFiles.length) return;
+    const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (!imgs.length) return;
     state.isLoadingImages = true;
     updateGenerateBtn();
-    setStatus('Chargement de l\'image…');
-    const uploadZone = document.getElementById('upload-zone');
-    uploadZone.classList.add('loading');
-    const results = await Promise.allSettled(imageFiles.map(f => processOneFile(f)));
+    setStatus('Chargement des images…');
+    const results = await Promise.allSettled(imgs.map(f => processOneFile(f)));
     for (const r of results) {
         if (r.status === 'fulfilled' && r.value) state.images.push(r.value);
     }
     state.isLoadingImages = false;
-    uploadZone.classList.remove('loading');
     setStatus(null);
     updateGenerateBtn();
     renderImages();
 }
-
 function removeImage(id) {
-    state.images = state.images.filter(img => img.id !== id);
+    state.images = state.images.filter(i => i.id !== id);
     renderImages();
     updateGenerateBtn();
 }
-
 function renderImages() {
     const grid = document.getElementById('images-grid');
-    grid.innerHTML = state.images.map(img => {
-        return '<div class="image-card">' +
-            '<img src="' + (img.thumbnail || img.dataUri) + '" alt="" loading="lazy">' +
+    grid.innerHTML = state.images.map(img =>
+        '<div class="image-card">' +
+            '<img src="' + img.thumbnail + '">' +
             '<button class="remove-btn" data-remove="' + img.id + '">✕</button>' +
-            '</div>';
-    }).join('');
-    grid.querySelectorAll('[data-remove]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        '</div>'
+    ).join('');
+    grid.querySelectorAll('[data-remove]').forEach(b => {
+        b.addEventListener('click', e => {
             e.stopPropagation();
-            removeImage(parseFloat(btn.dataset.remove));
+            removeImage(parseFloat(b.dataset.remove));
         });
     });
 }
 
-// ══════════════════════════════════════════════════════════════════
-// RENDU AMBIANCES
-// ══════════════════════════════════════════════════════════════════
-function renderStyles() {
-    const container = document.getElementById('styles-grid');
-    let html = '';
-    html += '<div class="no-style-card ' + (state.selectedAmbiance === null ? 'selected' : '') + '" data-ambiance="none">' +
-        (state.selectedAmbiance === null ? '✓ Aucune ambiance' : '🚫 Aucune ambiance (garder l\'image telle quelle)') +
-        '</div>';
-    html += '<div class="style-category-header">📢 Ambiances publicitaires</div>';
-    html += '<div class="style-category-desc">Choisissez le ton de votre publicité.</div>';
-    html += PUB_AMBIANCES.map(s => {
-        return '<div class="style-card ' + (state.selectedAmbiance === s.id ? 'selected' : '') + '" data-ambiance="' + s.id + '">' +
-            '<div class="style-emoji">' + s.emoji + '</div>' +
-            '<div>' +
-                '<div class="style-name">' + esc(s.name) + '</div>' +
-                '<div class="style-desc">' + esc(s.desc) + '</div>' +
-            '</div>' +
-        '</div>';
-    }).join('');
-    container.innerHTML = html;
-    container.querySelectorAll('[data-ambiance]').forEach(el => {
-        el.addEventListener('click', () => {
-            const val = el.dataset.ambiance;
-            state.selectedAmbiance = (val === 'none') ? null : val;
-            renderStyles();
-        });
-    });
-}
-
-// ══════════════════════════════════════════════════════════════════
-// PROMPT PUBLICITAIRE
-// ══════════════════════════════════════════════════════════════════
-function buildPrompt() {
-    const ambiance = state.selectedAmbiance
-        ? PUB_AMBIANCES.find(s => s.id === state.selectedAmbiance)
-        : null;
-
-    const productName = (document.getElementById('product-name')?.value || '').trim();
-    const hookText = (document.getElementById('hook-text')?.value || '').trim();
-    const benefitText = (document.getElementById('benefit-text')?.value || '').trim();
-    const ctaText = (document.getElementById('cta-text')?.value || '').trim();
-
-    const parts = [];
-
-    parts.push(
-        'Create a professional vertical 9:16 commercial advertisement video from this exact source image. ' +
-        'The product and the subject must remain IDENTICAL to the source image: same product, same shape, same colors, same label, same face, same expression, same clothing. ' +
-        'This is a COMMERCIAL CONTINUATION of the source image, not a re-imagination. ' +
-        'Preserve the exact composition, framing, and layout of the original image.'
-    );
-
-    if (ambiance) parts.push('Commercial ambiance: ' + ambiance.prompt);
-
-    parts.push(
-        'Narrative structure of the ad: ' +
-        'first 2 seconds — HOOK: the subject and product are introduced with impact, eye contact with camera, subtle confident motion. ' +
-        'middle — BENEFIT: the product is highlighted, light catches it beautifully, the subject\'s expression conveys trust and satisfaction. ' +
-        'last 2 seconds — CALL TO ACTION: the subject holds the product forward toward the camera, confident gaze, natural smile, sense of invitation.'
-    );
-
-    if (productName) parts.push('Product / brand for context: "' + productName + '" (do not render text, just inform the mood).');
-    if (hookText) parts.push('Emotional hook conveyed (no on-screen text): "' + hookText + '".');
-    if (benefitText) parts.push('Main benefit via attitude (no on-screen text): "' + benefitText + '".');
-    if (ctaText) parts.push('Call to action via body language (no on-screen text): "' + ctaText + '".');
-
-    if (state.framing !== 'random' && FRAMING_PRESETS[state.framing]) parts.push(FRAMING_PRESETS[state.framing]);
-    if (state.intensity !== 'random' && INTENSITY_PRESETS[state.intensity]) parts.push(INTENSITY_PRESETS[state.intensity]);
-    else parts.push('moderate movement, clear but controlled motion');
-
-    parts.push(randomItem(RANDOM_ACTIONS));
-    parts.push(randomItem(RANDOM_CAMERA));
-    parts.push(randomItem(RANDOM_LIGHTING));
-
-    parts.push('Sound design: minimal premium commercial foley, soft ambient textures, no music, no dialogue');
-    parts.push('Portrait 9:16 vertical, 24fps, no text, no subtitles, no watermarks, no logos added, consistent product and character design with the source image');
-
-    return parts.join('. ');
-}
-
-// ══════════════════════════════════════════════════════════════════
-// API AGNES
-// ══════════════════════════════════════════════════════════════════
-async function apiFetch(url, options = {}, label = 'API') {
-    for (let attempt = 0; attempt < 7; attempt++) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
+async function apiFetch(url, options = {}) {
+    for (let i = 0; i < 7; i++) {
+        if (state.stopRequested) throw new Error('Arrêt');
         try {
             const res = await fetch(url, options);
             if (res.status === 429) {
-                state.creationAttemptsSinceLastError = 0;
-                if (createIntervalMs < CREATE_INTERVAL_SAFE) {
-                    createIntervalMs = Math.min(createIntervalMs + 8000, CREATE_INTERVAL_MAX);
-                }
-                const wait = [15, 30, 45, 60, 90, 120, 180][Math.min(attempt, 6)];
+                const wait = [15, 30, 45, 60, 90, 120, 180][Math.min(i, 6)];
                 setStatus('L\'IA se prépare… (' + wait + 's)');
-                await sleep(wait * 1000);
-                continue;
+                await sleep(wait * 1000); continue;
             }
             if (res.status === 503) {
-                const wait = [5, 10, 15, 20, 30, 45][Math.min(attempt, 5)];
-                setStatus('Votre pub se prépare… (' + wait + 's)');
-                await sleep(wait * 1000);
-                continue;
-            }
-            if (res.ok && createIntervalMs > CREATE_INTERVAL_MIN) {
-                state.creationAttemptsSinceLastError++;
-                if (state.creationAttemptsSinceLastError >= 3) {
-                    createIntervalMs = Math.max(createIntervalMs - 4000, CREATE_INTERVAL_MIN);
-                    state.creationAttemptsSinceLastError = 0;
-                }
+                const wait = [5, 10, 15, 20, 30, 45][Math.min(i, 5)];
+                setStatus('Préparation… (' + wait + 's)');
+                await sleep(wait * 1000); continue;
             }
             return res;
         } catch (e) {
-            if (e.message === 'Arrêt demandé') throw e;
-            const wait = [3, 5, 8, 12, 20, 30][Math.min(attempt, 5)];
+            if (e.message === 'Arrêt') throw e;
+            const wait = [3, 5, 8, 12, 20, 30][Math.min(i, 5)];
             setStatus('Connexion… (' + wait + 's)');
             await sleep(wait * 1000);
         }
@@ -1161,21 +664,17 @@ async function apiFetch(url, options = {}, label = 'API') {
 }
 
 async function createVideoTask(imageDataUri, prompt) {
-    const body = {
-        model: MODEL_VIDEO,
-        prompt: prompt,
-        image: imageDataUri,
-        num_frames: state.durationFrames,
-        frame_rate: FRAME_RATE
-    };
     const res = await apiFetch(API_BASE + '/videos', {
         method: 'POST',
         headers: {
             'Authorization': 'Bearer ' + getApiKey(),
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
-    }, 'Création');
+        body: JSON.stringify({
+            model: MODEL_VIDEO, prompt: prompt, image: imageDataUri,
+            num_frames: state.durationFrames, frame_rate: FRAME_RATE
+        })
+    });
     if (!res.ok) {
         const err = await res.text();
         throw new Error('HTTP ' + res.status + ' — ' + err.slice(0, 200));
@@ -1187,133 +686,80 @@ async function createVideoTask(imageDataUri, prompt) {
 }
 
 async function pollVideo(videoId, onProgress) {
-    const estimatedMs = estimateGenerationTime(state.durationFrames);
-    const estimatedSec = estimatedMs / 1000;
-    let remaining = Math.max(20, Math.floor(estimatedSec * 0.8));
+    let remaining = 30;
     while (remaining > 0) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        onProgress('Votre publicité se prépare… — ' + remaining + 's');
-        await sleep(1000);
-        remaining--;
+        if (state.stopRequested) throw new Error('Arrêt');
+        onProgress('Préparation… — ' + remaining + 's');
+        await sleep(1000); remaining--;
     }
-    for (let attempt = 0; attempt < MAX_POLL_ATTEMPTS; attempt++) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        if (attempt > 0) {
+    for (let i = 0; i < MAX_POLL_ATTEMPTS; i++) {
+        if (state.stopRequested) throw new Error('Arrêt');
+        if (i > 0) {
             let r = POLL_INTERVAL_SEC;
             while (r > 0) {
-                if (state.stopRequested) throw new Error('Arrêt demandé');
-                onProgress('Votre produit prend vie… — ' + r + 's');
-                await sleep(1000);
-                r--;
+                if (state.stopRequested) throw new Error('Arrêt');
+                onProgress('Création… — ' + r + 's');
+                await sleep(1000); r--;
             }
         }
         const url = POLL_BASE + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + encodeURIComponent(MODEL_VIDEO);
-        const res = await apiFetch(url, {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + getApiKey() }
-        }, 'Polling');
+        const res = await apiFetch(url, { headers: { 'Authorization': 'Bearer ' + getApiKey() } });
         const d = await res.json();
         const status = d.status || 'unknown';
-        const progress = d.progress || 0;
-        onProgress('Rendu en cours… — ' + progress + '%');
+        onProgress('Création… — ' + (d.progress || 0) + '%');
         if (status === 'completed' || status === 'succeeded' || status === 'done') {
             const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
-            if (!videoUrl) throw new Error('Terminé mais pas d\'URL');
+            if (!videoUrl) throw new Error('Pas d\'URL');
             return videoUrl;
         }
-        if (status === 'failed' || status === 'error' || status === 'cancelled') {
-            throw new Error('Échec (' + status + ')');
-        }
+        if (status === 'failed' || status === 'error') throw new Error('Échec');
     }
-    throw new Error('Délai maximal dépassé');
+    throw new Error('Timeout');
 }
 
-// ══════════════════════════════════════════════════════════════════
-// FILE D'ATTENTE
-// ══════════════════════════════════════════════════════════════════
 function renderQueue() {
-    const queueEl = document.getElementById('queue');
-    if (!state.queue.length) { queueEl.style.display = 'none'; return; }
-    queueEl.style.display = 'block';
+    const el = document.getElementById('queue');
+    if (!state.queue.length) { el.style.display = 'none'; return; }
+    el.style.display = 'block';
     const total = state.queue.length;
     const done = state.completed + state.failed;
-    const inProgress = state.queue.filter(q => q.status === 'processing').length;
-    const pending = total - done - inProgress;
-    const estGen = estimateGenerationTime(state.durationFrames) / 1000;
-    const eta = pending > 0
-        ? (pending * (createIntervalMs / 1000)) + estGen
-        : (inProgress * estGen / Math.max(inProgress, 1));
-
     let html = '<div class="queue-summary">' +
-        '<span class="progress-text">Progression : ' + done + '/' + total + '</span>' +
-        '<span class="eta-text">' + (done < total ? '≈ ' + formatEta(eta) + ' restant' : 'Terminé') + '</span>' +
+        '<span>Progression : ' + done + '/' + total + '</span>' +
+        '<span>' + (done < total ? 'En cours' : 'Terminé') + '</span>' +
         '</div>';
-
-    const visible = state.queue.slice(0, MAX_VISIBLE_QUEUE);
-    const hidden = state.queue.length - visible.length;
-
-    html += visible.map(item => {
-        let icon = '○', statusText = 'En file', cls = 'pending';
-        if (item.status === 'creating') { icon = '◐'; statusText = 'Préparation…'; cls = 'creating'; }
-        else if (item.status === 'processing') { icon = '◐'; statusText = item.progress || 'En cours…'; cls = 'processing'; }
-        else if (item.status === 'done') { icon = '●'; statusText = 'Terminé'; cls = 'done'; }
-        else if (item.status === 'failed') { icon = '✕'; statusText = 'Échec'; cls = 'failed'; }
+    html += state.queue.slice(0, 30).map(item => {
+        let icon = '○', cls = 'pending', status = 'En file';
+        if (item.status === 'creating') { icon = '◐'; cls = 'creating'; status = 'Préparation'; }
+        else if (item.status === 'processing') { icon = '◐'; cls = 'processing'; status = item.progress || 'En cours'; }
+        else if (item.status === 'done') { icon = '●'; cls = 'done'; status = 'Terminé'; }
+        else if (item.status === 'failed') { icon = '✕'; cls = 'failed'; status = 'Échec'; }
         return '<div class="queue-item ' + cls + '">' +
-            '<div class="q-icon">' + icon + '</div>' +
-            '<div class="q-name">Publicité produit</div>' +
-            '<div class="q-status">' + esc(statusText) + '</div>' +
+            '<div>' + icon + '</div>' +
+            '<div class="q-name">Image ' + (item.index + 1) + '</div>' +
+            '<div class="q-status">' + status + '</div>' +
         '</div>';
     }).join('');
-
-    if (hidden > 0) html += '<div class="queue-more">… et ' + hidden + ' autre' + (hidden > 1 ? 's' : '') + '</div>';
-    queueEl.innerHTML = html;
+    el.innerHTML = html;
 }
 
-// ══════════════════════════════════════════════════════════════════
-// GALERIE
-// ══════════════════════════════════════════════════════════════════
-function addToGallery(videoUrl, label, dbId) {
-    const galleryEl = document.getElementById('gallery');
-    const galleryGrid = document.getElementById('gallery-grid');
-    galleryEl.style.display = 'block';
+function addToGallery(videoUrl, label) {
+    const g = document.getElementById('gallery');
+    const grid = document.getElementById('gallery-grid');
+    g.style.display = 'block';
     const el = document.createElement('div');
     el.className = 'gallery-item';
-    el.dataset.dbId = dbId || '';
     el.innerHTML = '<video controls preload="metadata" muted playsinline>' +
         '<source src="' + videoUrl + '" type="video/mp4">' +
         '</video>' +
-        '<div class="g-caption">' +
-            '<span>' + esc(label) + '</span>' +
-            '<button class="g-delete" data-delete="' + (dbId || '') + '">🗑</button>' +
-        '</div>';
-    galleryGrid.appendChild(el);
-    const delBtn = el.querySelector('.g-delete');
-    delBtn.addEventListener('click', async () => {
-        if (dbId) await deleteVideoFromDB(dbId);
-        el.remove();
-        if (!galleryGrid.children.length) galleryEl.style.display = 'none';
-    });
+        '<div class="g-caption"><span>' + label + '</span></div>';
+    grid.appendChild(el);
 }
 
-async function loadGalleryFromDB() {
-    const videos = await loadVideosFromDB();
-    if (!videos.length) return;
-    const clearBtn = document.getElementById('clear-history-btn');
-    if (clearBtn) clearBtn.style.display = 'block';
-    videos.sort((a, b) => a.date - b.date);
-    videos.forEach(v => addToGallery(v.url, v.label, v.id));
-}
-
-// ══════════════════════════════════════════════════════════════════
-// PIPELINE
-// ══════════════════════════════════════════════════════════════════
 async function createTaskOnly(item) {
     item.status = 'creating';
     item.progress = 'Préparation…';
     renderQueue();
     const prompt = buildPrompt();
-    item.prompt = prompt;
-    log('[Image ' + (item.imageIndex + 1) + '] Création…');
     const videoId = await createVideoTask(item.image.dataUri, prompt);
     item.videoId = videoId;
     item.startTime = Date.now();
@@ -1325,199 +771,160 @@ async function createTaskOnly(item) {
 
 async function pollTaskAndDisplay(item) {
     try {
-        const videoUrl = await pollVideo(item.videoId, (prog) => {
-            item.progress = prog;
-            renderQueue();
+        const videoUrl = await pollVideo(item.videoId, (p) => {
+            item.progress = p; renderQueue();
         });
-        const elapsed = Date.now() - item.startTime;
-        recordGenerationTime(state.durationFrames, elapsed);
         item.status = 'done';
         item.videoUrl = videoUrl;
-        item.progress = 'Terminé';
         state.completed++;
         renderQueue();
         updateGenerateBtn();
-
-        const label = 'Pub — ' + new Date().toLocaleString('fr-FR');
-        await saveVideoToDB(videoUrl, label);
-        const videos = await loadVideosFromDB();
-        const last = videos[videos.length - 1];
-        addToGallery(videoUrl, label, last ? last.id : null);
-        document.getElementById('clear-history-btn').style.display = 'block';
+        const label = state.currentMode.emoji + ' ' + state.currentMode.name;
+        addToGallery(videoUrl, label);
     } catch (e) {
-        if (e.message === 'Arrêt demandé') {
-            item.status = 'failed';
-            item.progress = 'Arrêté';
-        } else {
-            log('[Image ' + (item.imageIndex + 1) + '] ' + e.message);
-            item.status = 'failed';
-            item.progress = 'Échec';
-            state.failed++;
-        }
+        item.status = 'failed';
+        item.progress = 'Échec';
+        state.failed++;
         renderQueue();
         updateGenerateBtn();
     }
 }
 
-// ══════════════════════════════════════════════════════════════════
-// WORKFLOW
-// ══════════════════════════════════════════════════════════════════
 async function startGeneration() {
-    if (state.isRunning || !state.images.length) return;
-    if (!getApiKey()) {
-        showToast('Ajoutez votre clé API', 'error');
-        document.getElementById('api-key-input').focus();
-        return;
-    }
+    if (state.isRunning || !state.images.length || !state.currentMode) return;
+    if (!getApiKey()) { showToast('Ajoutez votre clé API', 'error'); return; }
 
     state.isRunning = true;
     state.stopRequested = false;
     state.completed = 0;
     state.failed = 0;
-    state.creationAttemptsSinceLastError = 0;
-    createIntervalMs = CREATE_INTERVAL_MIN;
 
     state.queue = state.images.map((img, i) => ({
-        imageIndex: i,
-        image: img,
-        status: 'pending',
-        progress: null,
-        videoId: null,
-        videoUrl: null,
-        prompt: null,
-        startTime: null
+        index: i, image: img, status: 'pending', progress: null,
+        videoId: null, videoUrl: null, startTime: null
     }));
 
     document.getElementById('stop-btn').classList.add('visible');
     document.getElementById('generate-btn').disabled = true;
-
-    await ensureWakeLockActive();
     renderQueue();
     updateGenerateBtn();
 
-    const totalStart = Date.now();
     const pollingTasks = [];
 
-    try {
-        for (let i = 0; i < state.queue.length; i++) {
-            if (state.stopRequested) break;
-            const item = state.queue[i];
-            try {
-                await createTaskOnly(item);
-                pollingTasks.push(pollTaskAndDisplay(item));
-            } catch (e) {
-                if (e.message === 'Arrêt demandé') break;
-                log('[Image ' + (i + 1) + '] Échec : ' + e.message);
-                item.status = 'failed';
-                item.progress = 'Échec';
-                state.failed++;
-                renderQueue();
-                updateGenerateBtn();
-            }
-            if (i < state.queue.length - 1 && !state.stopRequested) {
-                const waitSec = Math.ceil(createIntervalMs / 1000);
-                for (let r = waitSec; r > 0; r--) {
-                    if (state.stopRequested) break;
-                    setStatus('Respiration… — dans ' + r + 's');
-                    await sleep(1000);
-                }
+    for (let i = 0; i < state.queue.length; i++) {
+        if (state.stopRequested) break;
+        const item = state.queue[i];
+        try {
+            await createTaskOnly(item);
+            pollingTasks.push(pollTaskAndDisplay(item));
+        } catch (e) {
+            item.status = 'failed';
+            item.progress = 'Échec';
+            state.failed++;
+            renderQueue();
+            updateGenerateBtn();
+        }
+        if (i < state.queue.length - 1 && !state.stopRequested) {
+            const waitSec = Math.ceil(createIntervalMs / 1000);
+            for (let r = waitSec; r > 0; r--) {
+                if (state.stopRequested) break;
+                setStatus('Respiration… — ' + r + 's');
+                await sleep(1000);
             }
         }
-        if (pollingTasks.length > 0) {
-            setStatus('Finalisation…');
-            await Promise.allSettled(pollingTasks);
-        }
-    } catch (e) { log('Erreur globale : ' + e.message); }
+    }
 
-    const totalElapsed = (Date.now() - totalStart) / 1000;
-    const summary = state.stopRequested
-        ? 'Arrêté — ' + state.completed + '/' + state.queue.length
-        : '✦ ' + state.completed + '/' + state.queue.length + ' en ' + formatEta(totalElapsed) + ' ✦';
-    setStatus(summary);
-    await sleep(4000);
+    if (pollingTasks.length > 0) {
+        setStatus('Finalisation…');
+        await Promise.allSettled(pollingTasks);
+    }
+
+    setStatus('✦ ' + state.completed + ' vidéo' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : ''));
+    await sleep(3000);
     setStatus(null);
 
     state.isRunning = false;
     state.stopRequested = false;
     document.getElementById('stop-btn').classList.remove('visible');
     updateGenerateBtn();
-
-    showToast(state.completed + ' pub' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : ''), 'success');
+    showToast(state.completed + ' vidéo' + (state.completed > 1 ? 's' : ''), 'success');
 }
 
 function stopGeneration() {
-    if (!state.isRunning) return;
     state.stopRequested = true;
-    setStatus('Arrêt en cours…');
+    setStatus('Arrêt…');
 }
 
-// ══════════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════════
+async function activateWakeLock() {
+    try {
+        if ('wakeLock' in navigator) {
+            await navigator.wakeLock.request('screen');
+        }
+    } catch (e) {}
+    try {
+        const c = document.getElementById('noSleepCanvas');
+        const v = document.getElementById('noSleepVideo');
+        if (c && v && c.captureStream) {
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, c.width, c.height);
+            const stream = c.captureStream(1);
+            let t = false;
+            setInterval(() => {
+                t = !t;
+                ctx.fillStyle = t ? '#000' : '#010101';
+                ctx.fillRect(0, 0, c.width, c.height);
+            }, 1000);
+            v.srcObject = stream;
+            v.muted = true;
+            v.playsInline = true;
+            v.play().catch(() => {});
+        }
+    } catch (e) {}
+}
+
 (function init() {
-    document.getElementById('api-save-btn')?.addEventListener('click', saveApiKey);
-    document.getElementById('stop-btn')?.addEventListener('click', stopGeneration);
-    document.getElementById('api-key-input')?.addEventListener('keydown', (e) => {
+    state.currentMode = MODES.find(m => m.id === 'pub') || MODES[0];
+    updateModeCurrent();
+    renderModes();
+
+    document.getElementById('mode-search').addEventListener('input', (e) => {
+        renderModes(e.target.value);
+    });
+
+    document.querySelectorAll('[data-toggle]').forEach(h => {
+        h.addEventListener('click', () => {
+            document.getElementById(h.dataset.toggle).classList.toggle('open');
+        });
+    });
+
+    document.getElementById('api-save-btn').addEventListener('click', saveApiKey);
+    document.getElementById('api-key-input').addEventListener('keydown', e => {
         if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
     });
+    updateApiPanel();
 
-    document.querySelectorAll('[data-toggle]').forEach(header => {
-        header.addEventListener('click', () => {
-            document.getElementById(header.dataset.toggle).classList.toggle('open');
-        });
-    });
+    const uz = document.getElementById('upload-zone');
+    const fi = document.getElementById('file-input');
+    uz.addEventListener('click', () => fi.click());
+    fi.addEventListener('change', e => { handleFiles(e.target.files); fi.value = ''; });
 
-    const uploadZone = document.getElementById('upload-zone');
-    const fileInput = document.getElementById('file-input');
-    if (uploadZone && fileInput) {
-        uploadZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', e => {
-            handleFiles(e.target.files);
-            fileInput.value = '';
-        });
-    }
-
-    document.getElementById('duration-select')?.addEventListener('change', e => {
+    document.getElementById('duration-select').addEventListener('change', e => {
         state.durationFrames = parseInt(e.target.value, 10);
     });
-    document.getElementById('framing-select')?.addEventListener('change', e => { state.framing = e.target.value; });
-    document.getElementById('intensity-select')?.addEventListener('change', e => { state.intensity = e.target.value; });
+    document.getElementById('framing-select').addEventListener('change', e => { state.framing = e.target.value; });
+    document.getElementById('intensity-select').addEventListener('change', e => { state.intensity = e.target.value; });
 
-    document.getElementById('generate-btn')?.addEventListener('click', startGeneration);
-    document.getElementById('wake-toggle-btn')?.addEventListener('click', toggleWakeLock);
+    document.getElementById('generate-btn').addEventListener('click', startGeneration);
+    document.getElementById('stop-btn').addEventListener('click', stopGeneration);
 
-    document.getElementById('clear-history-btn')?.addEventListener('click', async () => {
-        if (!confirm('Effacer tout l\'historique local des vidéos ?')) return;
-        await clearAllVideos();
-        document.getElementById('gallery-grid').innerHTML = '';
-        document.getElementById('gallery').style.display = 'none';
-        document.getElementById('clear-history-btn').style.display = 'none';
-        showToast('Historique effacé', 'warn');
-    });
-
-    try {
-        const saved = localStorage.getItem(WAKE_LOCK_PREF);
-        wakeLockEnabled = saved === '1';
-    } catch (e) {}
-
-    if (wakeLockEnabled) activateWakeLock().then(() => updateWakeStatus());
-
-    // Service Worker
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
 
-    updateApiPanel();
-    updateTimingDisplay();
-    updateWakeStatus();
-    renderStyles();
-    renderImages();
-    renderQueue();
-    loadGalleryFromDB();
+    activateWakeLock();
 
-    log('Prêt.');
+    console.log('[Atelier] Prêt — ' + MODES.length + ' modes chargés');
 })();
 </script>
 
