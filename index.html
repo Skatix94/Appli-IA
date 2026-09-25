@@ -755,15 +755,39 @@ async function clearAllVideosDB() {
 }
 
 function downloadVideo(videoUrl, filename) {
-    const a = document.createElement('a');
-    a.href = videoUrl;
-    a.download = filename || 'atelier-video.mp4';
-    a.target = '_blank';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    showToast('Téléchargement lancé', 'success');
+    // Détection iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    if (isIOS) {
+        // Sur iOS : ouvrir la vidéo dans Safari, l'utilisateur fera "Enregistrer dans Photos"
+        showToast('Appuie longuement sur la vidéo → Enregistrer dans Photos', 'warn', 5000);
+        
+        // Ouvre la vidéo dans un nouvel onglet
+        const newWindow = window.open(videoUrl, '_blank');
+        
+        if (!newWindow) {
+            // Si le popup est bloqué, on utilise la méthode classique
+            const a = document.createElement('a');
+            a.href = videoUrl;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    } else {
+        // Sur Android / PC : téléchargement classique
+        const a = document.createElement('a');
+        a.href = videoUrl;
+        a.download = filename || 'atelier-video.mp4';
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('Téléchargement lancé', 'success');
+    }
 }
 
 function addToGallery(videoUrl, label, dbId) {
