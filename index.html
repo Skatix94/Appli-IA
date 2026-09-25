@@ -992,7 +992,8 @@ async function createVideoTask(imageDataUri, prompt) {
     model: MODEL_VIDEO,
     prompt: prompt,
     image: imageDataUri,
-    size: '1080x1920'  // ✅ Vrai 9:16 (1080 / 1920 = 0.5625)
+    width: 1080,    // Largeur (9:16)
+    height: 1920    // Hauteur (9:16)
 };
     // Adapter selon le modèle
 if (MODEL_VIDEO === 'agnes-video-2.0') {
