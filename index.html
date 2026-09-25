@@ -1090,11 +1090,11 @@ if (MODEL_VIDEO === 'agnes-video-v2.0') {
 }
 
 async function pollVideo(videoId, onProgress) {
-    let remaining = 30;
-    while (remaining > 0) {
+    // Phase initiale : attendre 30 secondes sans poller (le serveur démarre)
+    for (let s = 30; s > 0; s -= 8) {
         if (state.stopRequested) throw new Error('Arrêt');
-        onProgress('Préparation… — ' + remaining + 's');
-        await sleep(1000); remaining--;
+        onProgress('Préparation… — ' + s + 's');
+        await sleep(8000);   // 8 secondes au lieu de 1
     }
     for (let i = 0; i < MAX_POLL_ATTEMPTS; i++) {
         if (state.stopRequested) throw new Error('Arrêt');
