@@ -1244,9 +1244,9 @@ async function startGeneration() {
         await Promise.allSettled(createPromises);
 
         if (i + BATCH_SIZE < state.queue.length && !state.stopRequested) {
-            console.log('[Atelier] Pause de 60s avant le prochain lot…');
-            await sleep(60000);
-        }
+    console.log('[Atelier] Pause de 5s avant le prochain lot…');
+    await sleep(5000);
+}
     }
 
     setStatus('✦ ' + state.completed + ' vidéo' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : '') + ' sur ' + state.queue.length);
