@@ -1213,7 +1213,6 @@ async function startGeneration() {
     // GÉNÉRATION EN PARALLÈLE (par lots de 10)
     // ═══════════════════════════════════════════════════════════════
     const BATCH_SIZE = 1;
-    const allPollingTasks = [];
 
     console.log('[Atelier] Démarrage de ' + state.queue.length + ' générations par lots de ' + BATCH_SIZE);
 
@@ -1227,10 +1226,11 @@ async function startGeneration() {
 
         setStatus('Lot ' + (Math.floor(i / BATCH_SIZE) + 1) + ' — Lancement de ' + batch.length + ' vidéos…');
 
-        const createPromises = batch.map(async (item) => {
+                const createPromises = batch.map(async (item) => {
             try {
                 await createTaskOnly(item);
-                allPollingTasks.push(pollTaskAndDisplay(item));
+                // ⚠️ ATTENDRE la fin de la vidéo avant de passer à la suivante
+                await pollTaskAndDisplay(item);
             } catch (e) {
                 console.error('[Atelier] Échec item ' + item.index + ' :', e);
                 item.status = 'failed';
@@ -1244,14 +1244,9 @@ async function startGeneration() {
         await Promise.allSettled(createPromises);
 
         if (i + BATCH_SIZE < state.queue.length && !state.stopRequested) {
-            console.log('[Atelier] Pause de 5s avant le prochain lot…');
-            await sleep(60000);   // 60 secondes
+            console.log('[Atelier] Pause de 60s avant le prochain lot…');
+            await sleep(60000);
         }
-    }
-
-    if (allPollingTasks.length > 0) {
-        setStatus('Finalisation (' + state.completed + '/' + state.queue.length + ')…');
-        await Promise.allSettled(allPollingTasks);
     }
 
     setStatus('✦ ' + state.completed + ' vidéo' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : '') + ' sur ' + state.queue.length);
