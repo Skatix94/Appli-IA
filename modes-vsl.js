@@ -174,3 +174,4 @@ if (window.MODES) {
 } else {
     window.MODES = MODES_VSL;
 }
+console.log('[modes-vsl.js] ' + MODES_VSL.length + ' modes VSL chargés');
