@@ -56,11 +56,6 @@
         font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
         color: var(--ink-dim); font-weight: 600;
     }
-    .section-title .badge {
-        display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem;
-        background: var(--ink); color: #fff; border-radius: 10px;
-        font-size: 0.65rem;
-    }
     .section-header .chevron {
         font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s;
     }
@@ -239,8 +234,9 @@
     .q-name { flex: 1; min-width: 0; }
     .q-status { font-size: 0.7rem; color: var(--ink-dim); }
 
+    .gallery { margin-top: 1rem; }
     .gallery-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 0.6rem;
     }
     .gallery-item {
@@ -249,10 +245,35 @@
     }
     .gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
     .gallery-item .g-caption {
-        padding: 0.4rem 0.6rem; background: var(--panel);
+        padding: 0.5rem 0.6rem; background: var(--panel);
         font-size: 0.68rem; color: var(--ink-dim);
-        display: flex; justify-content: space-between; align-items: center;
+        display: flex; flex-direction: column; gap: 0.4rem;
     }
+    .gallery-item .g-title {
+        font-weight: 600; color: var(--ink);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .gallery-item .g-actions {
+        display: flex; gap: 0.4rem;
+    }
+    .gallery-item .g-btn {
+        flex: 1; padding: 0.4rem 0.5rem;
+        border-radius: 6px; border: none;
+        font-size: 0.7rem; font-weight: 600;
+        cursor: pointer; font-family: inherit;
+    }
+    .gallery-item .g-btn-download { background: var(--success); color: #fff; }
+    .gallery-item .g-btn-delete {
+        background: transparent; color: var(--error);
+        border: 1px solid var(--error);
+    }
+    .btn-clear-history {
+        width: 100%; padding: 0.7rem; border-radius: 8px;
+        border: 1px solid var(--border); background: transparent;
+        color: var(--ink-dim); font-size: 0.78rem; font-weight: 500;
+        cursor: pointer; font-family: inherit; margin-top: 0.6rem;
+    }
+    .btn-clear-history:active { background: var(--panel-2); }
 
     .status-bar {
         position: fixed; bottom: 0; left: 0; right: 0;
@@ -280,7 +301,7 @@
 
 <header>
     <h1>Atelier Vidéo</h1>
-    <p class="subtitle">60+ modes pour créer des vidéos IA</p>
+    <p class="subtitle">300 modes pour créer des vidéos IA</p>
 </header>
 
 <div class="api-panel" id="api-panel">
@@ -329,7 +350,7 @@
     </div>
     <div class="section-body">
         <div class="section-content">
-            <textarea id="main-prompt" placeholder="Décrivez ce que vous voulez en plus... Ex : ajoute un vent léger, ambiance chaleureuse, garde le sujet identique."></textarea>
+            <textarea id="main-prompt" placeholder="Décrivez ce que vous voulez en plus..."></textarea>
         </div>
     </div>
 </div>
@@ -341,16 +362,16 @@
     </div>
     <div class="section-body">
         <div class="section-content">
-<div class="control-row">
-    <label class="control-label">Durée</label>
-    <select id="duration-select">
-        <option value="121">5 secondes</option>
-        <option value="153" selected>6,4 secondes (recommandé)</option>
-        <option value="241">10 secondes</option>
-        <option value="337">14 secondes</option>
-        <option value="441">18 secondes (maximum)</option>
-    </select>
-</div>
+            <div class="control-row">
+                <label class="control-label">Durée</label>
+                <select id="duration-select">
+                    <option value="121">5 secondes</option>
+                    <option value="153" selected>6,4 secondes</option>
+                    <option value="241">10 secondes</option>
+                    <option value="337">14 secondes</option>
+                    <option value="441">18 secondes (maximum)</option>
+                </select>
+            </div>
             <div class="control-row">
                 <label class="control-label">Cadrage</label>
                 <select id="framing-select">
@@ -386,6 +407,9 @@
 <div class="gallery" id="gallery" style="display:none;">
     <div class="section-title" style="margin-bottom:0.6rem;">Vos vidéos</div>
     <div class="gallery-grid" id="gallery-grid"></div>
+    <button class="btn-clear-history" id="clear-history-btn" style="display:none;">
+        🗑 Effacer tout l'historique local
+    </button>
 </div>
 
 <div class="status-bar" id="status-bar">
@@ -412,13 +436,18 @@ const POLL_BASE = 'https://apihub.agnes-ai.com/agnesapi';
 const MODEL_VIDEO = 'agnes-video-v2.0';
 const FRAME_RATE = 24;
 
-let createIntervalMs = 62000;
 const CREATE_INTERVAL_MIN = 62000;
 const POLL_INTERVAL_SEC = 8;
 const MAX_POLL_ATTEMPTS = 100;
 const API_KEY_STORAGE = 'agnes_api_key';
 const MAX_IMAGE_SIZE = 12 * 1024 * 1024;
 const THUMBNAIL_MAX_WIDTH = 200;
+
+const DB_NAME = 'AtelierVideoDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'videos';
+
+let createIntervalMs = 62000;
 
 const state = {
     images: [], isRunning: false, stopRequested: false,
@@ -501,7 +530,7 @@ function buildPrompt() {
     parts.push(mode.basePrompt);
     parts.push('The subject must remain IDENTICAL to the source image: same face, same expression, same clothing, same identity, same composition. This is a CONTINUATION, not a re-imagination.');
     const userPrompt = document.getElementById('main-prompt')?.value.trim();
-    if (userPrompt) parts.push('Additional direction (highest priority, must not change subject identity): ' + userPrompt);
+    if (userPrompt) parts.push('Additional direction (highest priority): ' + userPrompt);
     const framingMap = {
         close: 'extreme close-up framing, tight on the subject',
         medium: 'medium shot, subject framed from waist up',
@@ -572,6 +601,123 @@ function setStatus(text) {
     const txt = document.getElementById('status-text');
     if (text) { bar.classList.add('visible'); txt.textContent = text; }
     else bar.classList.remove('visible');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INDEXEDDB — SAUVEGARDE LOCALE
+// ══════════════════════════════════════════════════════════════════
+let dbPromise = null;
+function openDB() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const store = db.createObjectStore(STORE_NAME, {
+                    keyPath: 'id', autoIncrement: true
+                });
+                store.createIndex('date', 'date', { unique: false });
+            }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+    });
+    return dbPromise;
+}
+async function saveVideoToDB(videoUrl, label) {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).add({ url: videoUrl, label: label, date: Date.now() });
+        return new Promise((resolve) => { tx.oncomplete = () => resolve(true); });
+    } catch (e) { return false; }
+}
+async function loadVideosFromDB() {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const req = tx.objectStore(STORE_NAME).getAll();
+        return new Promise((resolve) => {
+            req.onsuccess = () => resolve(req.result || []);
+            req.onerror = () => resolve([]);
+        });
+    } catch (e) { return []; }
+}
+async function deleteVideoFromDB(id) {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).delete(id);
+        return new Promise((resolve) => { tx.oncomplete = () => resolve(true); });
+    } catch (e) { return false; }
+}
+async function clearAllVideosDB() {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).clear();
+        return new Promise((resolve) => { tx.oncomplete = () => resolve(true); });
+    } catch (e) { return false; }
+}
+
+function downloadVideo(videoUrl, filename) {
+    const a = document.createElement('a');
+    a.href = videoUrl;
+    a.download = filename || 'atelier-video.mp4';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Téléchargement lancé', 'success');
+}
+
+function addToGallery(videoUrl, label, dbId) {
+    const g = document.getElementById('gallery');
+    const grid = document.getElementById('gallery-grid');
+    g.style.display = 'block';
+    const el = document.createElement('div');
+    el.className = 'gallery-item';
+    el.dataset.dbId = dbId || '';
+
+    const safeLabel = label.replace(/[<>"&]/g, '');
+    const filename = 'atelier-' + Date.now() + '.mp4';
+
+    el.innerHTML =
+        '<video controls preload="metadata" muted playsinline>' +
+            '<source src="' + videoUrl + '" type="video/mp4">' +
+        '</video>' +
+        '<div class="g-caption">' +
+            '<div class="g-title">' + safeLabel + '</div>' +
+            '<div class="g-actions">' +
+                '<button class="g-btn g-btn-download">📥 Télécharger</button>' +
+                '<button class="g-btn g-btn-delete">🗑</button>' +
+            '</div>' +
+        '</div>';
+
+    grid.appendChild(el);
+
+    el.querySelector('.g-btn-download').addEventListener('click', () => {
+        downloadVideo(videoUrl, filename);
+    });
+    el.querySelector('.g-btn-delete').addEventListener('click', async () => {
+        if (!confirm('Supprimer cette vidéo de l\'historique local ?')) return;
+        const id = parseInt(el.dataset.dbId, 10);
+        if (id) await deleteVideoFromDB(id);
+        el.remove();
+        if (!grid.children.length) {
+            document.getElementById('gallery').style.display = 'none';
+        }
+        updateClearBtn();
+    });
+}
+
+function updateClearBtn() {
+    const btn = document.getElementById('clear-history-btn');
+    if (!btn) return;
+    const grid = document.getElementById('gallery-grid');
+    btn.style.display = grid.children.length > 0 ? 'block' : 'none';
 }
 
 function fileToDataUri(file) {
@@ -748,19 +894,6 @@ function renderQueue() {
     el.innerHTML = html;
 }
 
-function addToGallery(videoUrl, label) {
-    const g = document.getElementById('gallery');
-    const grid = document.getElementById('gallery-grid');
-    g.style.display = 'block';
-    const el = document.createElement('div');
-    el.className = 'gallery-item';
-    el.innerHTML = '<video controls preload="metadata" muted playsinline>' +
-        '<source src="' + videoUrl + '" type="video/mp4">' +
-        '</video>' +
-        '<div class="g-caption"><span>' + label + '</span></div>';
-    grid.appendChild(el);
-}
-
 async function createTaskOnly(item) {
     item.status = 'creating';
     item.progress = 'Préparation…';
@@ -786,7 +919,11 @@ async function pollTaskAndDisplay(item) {
         renderQueue();
         updateGenerateBtn();
         const label = state.currentMode.emoji + ' ' + state.currentMode.name;
-        addToGallery(videoUrl, label);
+        await saveVideoToDB(videoUrl, label);
+        const videos = await loadVideosFromDB();
+        const last = videos[videos.length - 1];
+        addToGallery(videoUrl, label, last ? last.id : null);
+        updateClearBtn();
     } catch (e) {
         item.status = 'failed';
         item.progress = 'Échec';
@@ -894,9 +1031,10 @@ async function activateWakeLock() {
     updateModeCurrent();
     renderModes();
 
-    document.getElementById('mode-search').addEventListener('input', (e) => {
-        renderModes(e.target.value);
-    });
+    const modeSearch = document.getElementById('mode-search');
+    if (modeSearch) {
+        modeSearch.addEventListener('input', (e) => renderModes(e.target.value));
+    }
 
     document.querySelectorAll('[data-toggle]').forEach(h => {
         h.addEventListener('click', () => {
@@ -904,31 +1042,76 @@ async function activateWakeLock() {
         });
     });
 
-    document.getElementById('api-save-btn').addEventListener('click', saveApiKey);
-    document.getElementById('api-key-input').addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
-    });
+    const apiSaveBtn = document.getElementById('api-save-btn');
+    if (apiSaveBtn) apiSaveBtn.addEventListener('click', saveApiKey);
+
+    const apiInput = document.getElementById('api-key-input');
+    if (apiInput) {
+        apiInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
+        });
+    }
     updateApiPanel();
 
     const uz = document.getElementById('upload-zone');
     const fi = document.getElementById('file-input');
-    uz.addEventListener('click', () => fi.click());
-    fi.addEventListener('change', e => { handleFiles(e.target.files); fi.value = ''; });
+    if (uz && fi) {
+        uz.addEventListener('click', () => fi.click());
+        fi.addEventListener('change', e => {
+            handleFiles(e.target.files);
+            fi.value = '';
+        });
+    }
 
-    document.getElementById('duration-select').addEventListener('change', e => {
-        state.durationFrames = parseInt(e.target.value, 10);
-    });
-    document.getElementById('framing-select').addEventListener('change', e => { state.framing = e.target.value; });
-    document.getElementById('intensity-select').addEventListener('change', e => { state.intensity = e.target.value; });
+    const durationSelect = document.getElementById('duration-select');
+    if (durationSelect) {
+        durationSelect.addEventListener('change', e => {
+            state.durationFrames = parseInt(e.target.value, 10);
+        });
+    }
+    const framingSelect = document.getElementById('framing-select');
+    if (framingSelect) {
+        framingSelect.addEventListener('change', e => { state.framing = e.target.value; });
+    }
+    const intensitySelect = document.getElementById('intensity-select');
+    if (intensitySelect) {
+        intensitySelect.addEventListener('change', e => { state.intensity = e.target.value; });
+    }
 
-    document.getElementById('generate-btn').addEventListener('click', startGeneration);
-    document.getElementById('stop-btn').addEventListener('click', stopGeneration);
+    const generateBtn = document.getElementById('generate-btn');
+    if (generateBtn) generateBtn.addEventListener('click', startGeneration);
+
+    const stopBtn = document.getElementById('stop-btn');
+    if (stopBtn) stopBtn.addEventListener('click', stopGeneration);
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
 
     activateWakeLock();
+
+    (async () => {
+        const videos = await loadVideosFromDB();
+        if (videos && videos.length) {
+            videos.sort((a, b) => a.date - b.date);
+            videos.forEach(v => addToGallery(v.url, v.label, v.id));
+            updateClearBtn();
+        }
+    })();
+
+    const clearBtn = document.getElementById('clear-history-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', async () => {
+            if (!confirm('Effacer TOUT l\'historique local des vidéos ?')) return;
+            await clearAllVideosDB();
+            const grid = document.getElementById('gallery-grid');
+            if (grid) grid.innerHTML = '';
+            const gal = document.getElementById('gallery');
+            if (gal) gal.style.display = 'none';
+            updateClearBtn();
+            showToast('Historique effacé', 'warn');
+        });
+    }
 
     console.log('[Atelier] Prêt — ' + MODES.length + ' modes chargés');
 })();
