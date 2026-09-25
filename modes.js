@@ -1344,10 +1344,8 @@ const MODES = [
   basePrompt: 'Animate this image as a consulting presentation. Analysis, strategy, results. Preserve exact scene.',
   actions: ['charts animate, strategy shown'],
   cameras: ['static frame'],
-  lights: ['modern office light'] }
+  lights: ['modern office light'] },
 
-
-,
 // ═══════════════════════════════════════════════════════════════
 // 🌍 VOYAGE
 // ═══════════════════════════════════════════════════════════════
