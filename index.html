@@ -916,12 +916,13 @@ async function createVideoTask(imageDataUri, prompt) {
     };
 
     // Adapter selon le modèle
-    if (MODEL_VIDEO === 'agnes-video-2.5-flash') {
-        body.seconds = "5";
-    } else {
-        body.num_frames = state.durationFrames;
-        body.frame_rate = FRAME_RATE;
-    }
+if (MODEL_VIDEO === 'agnes-video-2.5-flash') {
+    const durSec = Math.min(12, Math.max(4, Math.round(state.durationFrames / 24)));
+    body.seconds = String(durSec);
+} else {
+    body.num_frames = state.durationFrames;
+    body.frame_rate = FRAME_RATE;
+}
 
     const res = await apiFetch(API_BASE + '/videos', {
         method: 'POST',
