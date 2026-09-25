@@ -422,7 +422,7 @@ const MODES = [
   basePrompt: 'Animate this image as a 3-second VSL call to action. The subject points down (toward the "link below") with authority and confidence. Urgent, direct, commanding gaze.',
   actions: ['the subject points firmly downward, eyes locked on the camera','the subject gestures toward the link below with urgency','the subject holds the product and points down'],
   cameras: ['slow push-in on the pointing gesture','static locked-off frame','tilt down following the pointing hand'],
-  lights: ['dramatic bold light with strong shadows','high-contrast commercial light','vivid saturated light'] }
+lights: ['dramatic bold light with strong shadows','high-contrast commercial light','vivid saturated light'] },
 
 
 // ═══════════════════════════════════════════════════════════════
