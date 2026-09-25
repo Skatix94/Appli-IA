@@ -881,12 +881,48 @@ function generateThumbnail(dataUri) {
         img.src = dataUri;
     });
 }
+   function cropTo916(dataUri) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            try {
+                const targetRatio = 9 / 16; // 0.5625
+                const currentRatio = img.width / img.height;
+                
+                let sx = 0, sy = 0, sw = img.width, sh = img.height;
+                
+                if (currentRatio > targetRatio) {
+                    // Image trop large → on coupe les côtés
+                    sw = img.height * targetRatio;
+                    sx = (img.width - sw) / 2;
+                } else {
+                    // Image trop haute → on coupe le haut/bas
+                    sh = img.width / targetRatio;
+                    sy = (img.height - sh) / 2;
+                }
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 1080;
+                canvas.height = 1920;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.9));
+            } catch (e) { 
+                resolve(dataUri); // Fallback : on envoie l'original
+            }
+        };
+        img.onerror = () => resolve(dataUri);
+        img.src = dataUri;
+    });
+}
 async function processOneFile(file) {
     if (!file.type.startsWith('image/') || file.size > MAX_IMAGE_SIZE) return null;
     try {
         const dataUri = await fileToDataUri(file);
-        const thumbnail = await generateThumbnail(dataUri);
-        return { dataUri, thumbnail, id: Date.now() + Math.random() };
+        // Recadre l'image en 9:16 AVANT de l'envoyer
+        const croppedDataUri = await cropTo916(dataUri);
+        const thumbnail = await generateThumbnail(croppedDataUri);
+        return { dataUri: croppedDataUri, thumbnail, id: Date.now() + Math.random() };
     } catch (e) { return null; }
 }
 async function handleFiles(files) {
