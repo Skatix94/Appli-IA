@@ -801,18 +801,6 @@ async function shareVideo(videoUrl, filename) {
     showToast('Appuie longuement → Enregistrer dans Photos', 'warn', 6000);
 }
 
-    // Fallback : méthode classique
-    const a = document.createElement('a');
-    a.href = videoUrl;
-    a.download = filename || 'atelier-video.mp4';
-    a.target = '_blank';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    showToast('Téléchargement lancé', 'success');
-}
-
 function addToGallery(videoUrl, label, dbId) {
     const g = document.getElementById('gallery');
     const grid = document.getElementById('gallery-grid');
