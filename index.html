@@ -263,6 +263,7 @@
         cursor: pointer; font-family: inherit;
     }
     .gallery-item .g-btn-download { background: var(--success); color: #fff; }
+    .gallery-item .g-btn-share { background: #4a6cf7; color: #fff; }
     .gallery-item .g-btn-delete {
         background: transparent; color: var(--error);
         border: 1px solid var(--error);
@@ -755,28 +756,50 @@ async function clearAllVideosDB() {
 }
 
 async function downloadVideo(videoUrl, filename) {
-    // Méthode moderne : utiliser l'API Web Share (iOS)
-    if (navigator.share && navigator.canShare) {
+    // Détection iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    if (isIOS) {
+        showToast('Appuie longuement sur la vidéo → Enregistrer dans Photos', 'warn', 8000);
+        window.open(videoUrl, '_blank');
+        return;
+    }
+
+    // Sur Android / PC : téléchargement classique
+    const a = document.createElement('a');
+    a.href = videoUrl;
+    a.download = filename || 'atelier-video.mp4';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Téléchargement lancé', 'success');
+}
+
+async function shareVideo(videoUrl, filename) {
+    if (navigator.share) {
         try {
-            // Récupérer le fichier vidéo
             const response = await fetch(videoUrl);
             const blob = await response.blob();
             const file = new File([blob], filename || 'atelier-video.mp4', { type: 'video/mp4' });
 
-            // Vérifier si on peut partager ce fichier
-            if (navigator.canShare({ files: [file] })) {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
                     files: [file],
                     title: 'Atelier Vidéo',
                     text: 'Ma vidéo générée'
                 });
-                showToast('Menu de partage ouvert', 'success');
                 return;
             }
         } catch (e) {
             console.warn('Partage échoué :', e);
         }
     }
+    window.open(videoUrl, '_blank');
+    showToast('Appuie longuement → Enregistrer dans Photos', 'warn', 6000);
+}
 
     // Fallback : méthode classique
     const a = document.createElement('a');
@@ -808,16 +831,24 @@ function addToGallery(videoUrl, label, dbId) {
         '<div class="g-caption">' +
             '<div class="g-title">' + safeLabel + '</div>' +
             '<div class="g-actions">' +
-                '<button class="g-btn g-btn-download">📥 Télécharger</button>' +
+                '<button class="g-btn g-btn-download">📥 Enregistrer</button>' +
+                '<button class="g-btn g-btn-share">📤 Partager</button>' +
                 '<button class="g-btn g-btn-delete">🗑</button>' +
             '</div>' +
         '</div>';
 
     grid.appendChild(el);
 
+    // ⬇️⬇️⬇️ C'EST ICI QUE TU AJOUTES LE CODE ⬇️⬇️⬇️
     el.querySelector('.g-btn-download').addEventListener('click', () => {
         downloadVideo(videoUrl, filename);
     });
+    
+    el.querySelector('.g-btn-share').addEventListener('click', () => {
+        shareVideo(videoUrl, filename);
+    });
+    // ⬆️⬆️⬆️ FIN DU CODE À AJOUTER ⬆️⬆️⬆️
+
     el.querySelector('.g-btn-delete').addEventListener('click', async () => {
         if (!confirm('Supprimer cette vidéo de l\'historique local ?')) return;
         const id = parseInt(el.dataset.dbId, 10);
