@@ -343,7 +343,21 @@
     <div class="upload-hint">Une ou plusieurs — chacune deviendra une vidéo</div>
 </div>
 <div class="images-grid" id="images-grid"></div>
-
+<!-- Prompts individuels par image -->
+<div class="section" id="section-individual-prompts" style="display:none;">
+    <div class="section-header" data-toggle="section-individual-prompts">
+        <span class="section-title">✍️ Prompts individuels <span class="badge soft">optionnel</span></span>
+        <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+        <div class="section-content">
+            <div id="individual-prompts-list"></div>
+            <div style="font-size: 0.68rem; color: var(--ink-dim); margin-top: 0.6rem; line-height: 1.4;">
+                💡 Chaque prompt s'applique à <strong>une seule image</strong>. Si tu laisses vide, le prompt global sera utilisé.
+            </div>
+        </div>
+    </div>
+</div>
 <div class="section" id="section-prompt">
     <div class="section-header" data-toggle="section-prompt">
         <span class="section-title">✍️ Votre direction (optionnel)</span>
@@ -529,7 +543,7 @@ function updateModeCurrent() {
 
 function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function buildPrompt() {
+function buildPrompt(individualPrompt = '') {
     const mode = state.currentMode;
     if (!mode) return '';
 
@@ -579,9 +593,15 @@ function buildPrompt() {
     // ═══════════════════════════════════════════════════════════════
     // 4. PROMPT PERSONNALISÉ DE L'UTILISATEUR
     // ═══════════════════════════════════════════════════════════════
+        // Prompt global (commun à toutes les vidéos)
     const userPrompt = document.getElementById('main-prompt')?.value.trim();
     if (userPrompt) {
         parts.push('Additional artistic direction (highest priority, must not change subject identity): ' + userPrompt);
+    }
+    
+    // Prompt individuel (spécifique à cette image)
+    if (individualPrompt && individualPrompt.trim()) {
+        parts.push('SPECIFIC DIRECTION FOR THIS IMAGE (highest priority): ' + individualPrompt.trim());
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -959,6 +979,51 @@ function renderImages() {
             removeImage(parseFloat(b.dataset.remove));
         });
     });
+    
+    // Mettre à jour les prompts individuels
+    renderIndividualPrompts();
+}
+
+function renderIndividualPrompts() {
+    const section = document.getElementById('section-individual-prompts');
+    const list = document.getElementById('individual-prompts-list');
+    
+    if (!section || !list) return;
+    
+    // Afficher la section seulement s'il y a au moins 1 image
+    if (state.images.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+    
+    section.style.display = 'block';
+    section.classList.add('open');
+    
+    list.innerHTML = state.images.map((img, i) => {
+        return '<div class="control-row" style="display: flex; gap: 0.6rem; align-items: flex-start;">' +
+            '<div style="flex-shrink: 0; width: 50px; height: 88px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border);">' +
+                '<img src="' + img.thumbnail + '" style="width: 100%; height: 100%; object-fit: cover;">' +
+            '</div>' +
+            '<div style="flex: 1;">' +
+                '<label class="control-label" style="margin-bottom: 0.3rem;">Image ' + (i + 1) + '</label>' +
+                '<textarea data-individual-prompt="' + i + '" ' +
+                    'placeholder="Prompt spécifique pour cette image (optionnel)..." ' +
+                    'style="min-height: 60px; font-size: 0.82rem;">' + 
+                    (img.individualPrompt || '') +
+                '</textarea>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+    
+    // Attacher les listeners pour sauvegarder les prompts
+    list.querySelectorAll('[data-individual-prompt]').forEach(ta => {
+        ta.addEventListener('input', (e) => {
+            const idx = parseInt(e.target.dataset.individualPrompt, 10);
+            if (state.images[idx]) {
+                state.images[idx].individualPrompt = e.target.value;
+            }
+        });
+    });
 }
 
 async function apiFetch(url, options = {}) {
@@ -1085,7 +1150,11 @@ async function createTaskOnly(item) {
     item.status = 'creating';
     item.progress = 'Préparation…';
     renderQueue();
-    const prompt = buildPrompt();
+    
+    // Utiliser le prompt individuel s'il existe
+    const individualPrompt = item.image.individualPrompt || '';
+    const prompt = buildPrompt(individualPrompt);
+    
     const videoId = await createVideoTask(item.image.dataUri, prompt);
     item.videoId = videoId;
     item.startTime = Date.now();
