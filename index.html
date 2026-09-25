@@ -529,28 +529,116 @@ function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function buildPrompt() {
     const mode = state.currentMode;
     if (!mode) return '';
+
     const parts = [];
+
+    // ═══════════════════════════════════════════════════════════════
+    // 1. BASE DU MODE
+    // ═══════════════════════════════════════════════════════════════
     parts.push(mode.basePrompt);
-    parts.push('The subject must remain IDENTICAL to the source image: same face, same expression, same clothing, same identity, same composition. This is a CONTINUATION, not a re-imagination.');
+
+    // ═══════════════════════════════════════════════════════════════
+    // 2. INSTRUCTIONS GÉNÉRALES DE PRÉSERVATION
+    // ═══════════════════════════════════════════════════════════════
+    parts.push(
+        'The subject must remain IDENTICAL to the source image: same face, same expression, ' +
+        'same clothing, same identity, same composition. This is a CONTINUATION, not a re-imagination.'
+    );
+
+    // ═══════════════════════════════════════════════════════════════
+    // 3. DÉTECTION MODE PARLANT + TEXTE À DIRE
+    // ═══════════════════════════════════════════════════════════════
+    const speechText = (document.getElementById('speech-text')?.value || '').trim();
+    const isTalkingMode = mode.cat && mode.cat.toLowerCase().includes('parlant');
+
+    if (isTalkingMode && speechText) {
+        // Instructions précises pour Agnes : voix française + lip-sync
+        parts.push(
+            'CRITICAL INSTRUCTION — This is a TALKING VIDEO. ' +
+            'The subject is speaking directly to the camera with natural mouth movements. ' +
+            'The lips MUST be perfectly synchronized with the spoken dialogue. ' +
+            'Generate the voice in FRENCH (langue française) with a natural, warm, professional tone. ' +
+            'No English voice. No other language. Only French. ' +
+            'The dialogue to speak is: "' + speechText + '". ' +
+            'The mouth, jaw, and facial expression must move to match this exact French dialogue. ' +
+            'Add subtle natural head movements, small blinks, and gentle breathing while speaking. ' +
+            'The speech must feel authentic, confident, and natural — like a real person talking.'
+        );
+    } else if (isTalkingMode) {
+        // Mode parlant sans texte → juste mouvement de bouche
+        parts.push(
+            'The subject is speaking directly to the camera. Mouth moving naturally as if talking. ' +
+            'Subtle head movements, natural blinks, and gentle breathing. ' +
+            'A sense of authentic speech, but with no specific dialogue specified.'
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 4. PROMPT PERSONNALISÉ DE L'UTILISATEUR
+    // ═══════════════════════════════════════════════════════════════
     const userPrompt = document.getElementById('main-prompt')?.value.trim();
-    if (userPrompt) parts.push('Additional direction (highest priority): ' + userPrompt);
+    if (userPrompt) {
+        parts.push('Additional artistic direction (highest priority, must not change subject identity): ' + userPrompt);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 5. CADRAGE
+    // ═══════════════════════════════════════════════════════════════
     const framingMap = {
-        close: 'extreme close-up framing, tight on the subject',
-        medium: 'medium shot, subject framed from waist up',
+        close: 'extreme close-up framing, tight on the subject\'s face, lips clearly visible',
+        medium: 'medium shot, subject framed from waist up, face and mouth clearly visible',
         wide: 'wide shot with the environment visible'
     };
-    if (state.framing !== 'random' && framingMap[state.framing]) parts.push(framingMap[state.framing]);
+    if (state.framing !== 'random' && framingMap[state.framing]) {
+        parts.push(framingMap[state.framing]);
+    } else if (isTalkingMode) {
+        // Pour les modes parlants, on force un cadrage qui montre bien la bouche
+        parts.push('medium close-up framing, face and mouth clearly visible for lip-sync');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 6. INTENSITÉ
+    // ═══════════════════════════════════════════════════════════════
     const intensityMap = {
         subtle: 'very subtle movement, barely perceptible, gentle',
         moderate: 'moderate movement, clear but controlled',
         strong: 'strong dynamic movement, energetic'
     };
-    if (state.intensity !== 'random' && intensityMap[state.intensity]) parts.push(intensityMap[state.intensity]);
-    else parts.push('moderate movement, controlled');
-    parts.push(randomItem(mode.actions));
-    parts.push(randomItem(mode.cameras));
-    parts.push(randomItem(mode.lights));
-    parts.push('Portrait 9:16 vertical, 24fps, no text, no subtitles, no watermarks');
+    if (state.intensity !== 'random' && intensityMap[state.intensity]) {
+        parts.push(intensityMap[state.intensity]);
+    } else if (isTalkingMode) {
+        parts.push('natural moderate movement, realistic talking gestures');
+    } else {
+        parts.push('moderate movement, controlled');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 7. MOUVEMENTS / CAMÉRAS / LUMIÈRES ALÉATOIRES DU MODE
+    // ═══════════════════════════════════════════════════════════════
+    if (mode.actions && mode.actions.length) parts.push(randomItem(mode.actions));
+    if (mode.cameras && mode.cameras.length) parts.push(randomItem(mode.cameras));
+    if (mode.lights && mode.lights.length) parts.push(randomItem(mode.lights));
+
+    // ═══════════════════════════════════════════════════════════════
+    // 8. CONTRAINTES FINALES
+    // ═══════════════════════════════════════════════════════════════
+    if (isTalkingMode) {
+        parts.push(
+            'Portrait 9:16 vertical, 24fps. ' +
+            'No text overlay, no subtitles, no watermarks. ' +
+            'Audio: French voice only, natural delivery, no background music.'
+        );
+    } else {
+        parts.push(
+            'Portrait 9:16 vertical, 24fps, no text, no subtitles, no watermarks'
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 9. LOG POUR DÉBOGAGE (optionnel, tu peux le retirer)
+    // ═══════════════════════════════════════════════════════════════
+    console.log('[Atelier] Mode :', mode.name, '| Parlant :', isTalkingMode, '| Texte :', speechText ? speechText.slice(0, 60) + '…' : 'aucun');
+
     return parts.join('. ');
 }
 
