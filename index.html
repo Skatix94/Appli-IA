@@ -996,7 +996,7 @@ async function createVideoTask(imageDataUri, prompt) {
     height: 1920    // Hauteur (9:16)
 };
     // Adapter selon le modèle
-if (MODEL_VIDEO === 'agnes-video-2.0') {
+if (MODEL_VIDEO === 'agnes-video-v2.0') {
     const durSec = Math.min(12, Math.max(4, Math.round(state.durationFrames / 24)));
     body.seconds = String(durSec);
 } else {
@@ -1129,6 +1129,7 @@ async function startGeneration() {
     state.completed = 0;
     state.failed = 0;
 
+    // Créer la file d'attente
     state.queue = state.images.map((img, i) => ({
         index: i, image: img, status: 'pending', progress: null,
         videoId: null, videoUrl: null, startTime: null
@@ -1139,37 +1140,52 @@ async function startGeneration() {
     renderQueue();
     updateGenerateBtn();
 
-    const pollingTasks = [];
+    // ═══════════════════════════════════════════════════════════════
+    // GÉNÉRATION EN PARALLÈLE (par lots de 10)
+    // ═══════════════════════════════════════════════════════════════
+    const BATCH_SIZE = 10;
+    const allPollingTasks = [];
 
-    for (let i = 0; i < state.queue.length; i++) {
+    console.log('[Atelier] Démarrage de ' + state.queue.length + ' générations par lots de ' + BATCH_SIZE);
+
+    for (let i = 0; i < state.queue.length; i += BATCH_SIZE) {
         if (state.stopRequested) break;
-        const item = state.queue[i];
-        try {
-            await createTaskOnly(item);
-            pollingTasks.push(pollTaskAndDisplay(item));
-        } catch (e) {
-            item.status = 'failed';
-            item.progress = 'Échec';
-            state.failed++;
-            renderQueue();
-            updateGenerateBtn();
-        }
-        if (i < state.queue.length - 1 && !state.stopRequested) {
-            const waitSec = Math.ceil(createIntervalMs / 1000);
-            for (let r = waitSec; r > 0; r--) {
-                if (state.stopRequested) break;
-                setStatus('Respiration… — ' + r + 's');
-                await sleep(1000);
+
+        const batch = state.queue.slice(i, i + BATCH_SIZE);
+
+        console.log('[Atelier] Lancement du lot ' + (Math.floor(i / BATCH_SIZE) + 1) +
+                    ' (' + batch.length + ' vidéos)');
+
+        setStatus('Lot ' + (Math.floor(i / BATCH_SIZE) + 1) + ' — Lancement de ' + batch.length + ' vidéos…');
+
+        const createPromises = batch.map(async (item) => {
+            try {
+                await createTaskOnly(item);
+                allPollingTasks.push(pollTaskAndDisplay(item));
+            } catch (e) {
+                console.error('[Atelier] Échec item ' + item.index + ' :', e);
+                item.status = 'failed';
+                item.progress = 'Échec';
+                state.failed++;
+                renderQueue();
+                updateGenerateBtn();
             }
+        });
+
+        await Promise.allSettled(createPromises);
+
+        if (i + BATCH_SIZE < state.queue.length && !state.stopRequested) {
+            console.log('[Atelier] Pause de 5s avant le prochain lot…');
+            await sleep(5000);
         }
     }
 
-    if (pollingTasks.length > 0) {
-        setStatus('Finalisation…');
-        await Promise.allSettled(pollingTasks);
+    if (allPollingTasks.length > 0) {
+        setStatus('Finalisation (' + state.completed + '/' + state.queue.length + ')…');
+        await Promise.allSettled(allPollingTasks);
     }
 
-    setStatus('✦ ' + state.completed + ' vidéo' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : ''));
+    setStatus('✦ ' + state.completed + ' vidéo' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : '') + ' sur ' + state.queue.length);
     await sleep(3000);
     setStatus(null);
 
@@ -1177,7 +1193,7 @@ async function startGeneration() {
     state.stopRequested = false;
     document.getElementById('stop-btn').classList.remove('visible');
     updateGenerateBtn();
-    showToast(state.completed + ' vidéo' + (state.completed > 1 ? 's' : ''), 'success');
+    showToast(state.completed + '/' + state.queue.length + ' vidéo' + (state.completed > 1 ? 's' : '') + ' créée' + (state.completed > 1 ? 's' : ''), 'success');
 }
 
 function stopGeneration() {
