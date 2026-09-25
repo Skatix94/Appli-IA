@@ -478,7 +478,7 @@ function showToast(message, type = 'success', duration = 2200) {
 function renderModes(filter = '') {
     const list = document.getElementById('mode-list');
     const f = filter.toLowerCase().trim();
-    const filtered = MODES.filter(m =>
+    const filtered = window.MODES.filter(m =>
         !f || m.name.toLowerCase().includes(f)
              || m.cat.toLowerCase().includes(f)
              || m.desc.toLowerCase().includes(f)
@@ -506,7 +506,7 @@ function renderModes(filter = '') {
     list.innerHTML = html;
     list.querySelectorAll('[data-mode]').forEach(el => {
         el.addEventListener('click', () => {
-            const mode = MODES.find(m => m.id === el.dataset.mode);
+            const mode = window.MODES.find(m => m.id === el.dataset.mode);
             if (mode) {
                 state.currentMode = mode;
                 updateModeCurrent();
@@ -1134,7 +1134,7 @@ async function activateWakeLock() {
 }
 
 (function init() {
-    state.currentMode = MODES.find(m => m.id === 'parle-vsl-hook') || MODES[0];
+    state.currentMode = window.MODES.find(m => m.id === 'parle-vsl-hook') || window.MODES[0];
     updateModeCurrent();
     renderModes();
 
@@ -1220,7 +1220,7 @@ async function activateWakeLock() {
         });
     }
 
-    console.log('[Atelier] Prêt — ' + MODES.length + ' modes chargés');
+    console.log('[Atelier] Prêt — ' + window.MODES.length + ' modes chargés');
 })();
 </script>
 
