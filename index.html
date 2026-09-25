@@ -1212,7 +1212,7 @@ async function startGeneration() {
     // ═══════════════════════════════════════════════════════════════
     // GÉNÉRATION EN PARALLÈLE (par lots de 10)
     // ═══════════════════════════════════════════════════════════════
-    const BATCH_SIZE = 10;
+    const BATCH_SIZE = 1;
     const allPollingTasks = [];
 
     console.log('[Atelier] Démarrage de ' + state.queue.length + ' générations par lots de ' + BATCH_SIZE);
