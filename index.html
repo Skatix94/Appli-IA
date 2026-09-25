@@ -989,13 +989,13 @@ async function apiFetch(url, options = {}) {
 
 async function createVideoTask(imageDataUri, prompt) {
     const body = {
-        model: MODEL_VIDEO,
-        prompt: prompt,
-        image: imageDataUri
-    };
-
+    model: MODEL_VIDEO,
+    prompt: prompt,
+    image: imageDataUri,
+    size: '1080x1920'  // ✅ Vrai 9:16 (1080 / 1920 = 0.5625)
+};
     // Adapter selon le modèle
-if (MODEL_VIDEO === 'agnes-video-2.5-flash') {
+if (MODEL_VIDEO === 'agnes-video-2.0') {
     const durSec = Math.min(12, Math.max(4, Math.round(state.durationFrames / 24)));
     body.seconds = String(durSec);
 } else {
